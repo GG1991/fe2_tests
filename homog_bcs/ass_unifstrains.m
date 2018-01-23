@@ -1,6 +1,6 @@
 %  ensambla el Jacobiano (J) y el residuo (r)
 
-function [jac, res] = ass_unifstrains (elements, coordinates, strain_mac, bc_nods, nx, ny, lx, ly, u_n)
+function [jac, res] = ass_unifstrains (elements, coordinates, bc_nods, strain_mac, nx, ny, lx, ly, u_n)
 
 nnods = nx*ny;
 dim = 2;
@@ -53,8 +53,16 @@ for e = 1 : size(elements, 1)
 
 end
 
-u_d = zeros(size(bc_nods, 1)*dim);
-for n = 1 : size(bc_nods, 1) 
+u_d = zeros(size(bc_nods, 1)*dim, 1);
+for n = 1 : size(bc_nods, 1)
+  u_d([n*dim - 1, n*dim]) = [strain_mac(1) strain_mac(3) ; strain_mac(3) strain_mac(2)] * coordinates(bc_nods(n), :)';
+end
+res([bc_nods*dim - 1; bc_nods*dim]) = u_n([bc_nods*dim - 1; bc_nods*dim]) - u_d;
+jac([bc_nods*dim - 1; bc_nods*dim], :) = 0.0;
+for n = 1 : size(bc_nods, 1)
+  for d = 0 : 1
+    jac(bc_nods(n)*dim - d, bc_nods(n)*dim - d) = 1.0;
+  end
 end
 
 endfunction
