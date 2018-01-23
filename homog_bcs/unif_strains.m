@@ -1,8 +1,11 @@
-nx = 3;
-ny = 3;
-dx = 2;
-dy = 2;
+nx = 10;
+ny = 10;
+lx = 3;
+ly = 3;
+dx = lx / (nx - 1);
+dy = ly / (ny - 1);
 npe = 4;
+dim = 2;
 
 elements = zeros((nx-1)*(ny-1), npe);
 for i = 1 : (ny-1)
@@ -14,6 +17,21 @@ for i = 1 : (ny-1)
   end
 end
 
-elements
+coordinates = zeros(nx*ny, dim);
+for i = 1 : ny
+  for j = 1 : nx
+    coordinates((i - 1)*nx + j, 1) = (j - 1)*dx;
+    coordinates((i - 1)*nx + j, 2) = (i - 1)*dy;
+  end
+end
 
-[jac, res] = ass_unifstrains (elements, nx, ny, dx, dy);
+#elements
+#coordinates
+
+u_n = zeros(nx*ny*dim, 1);
+
+[jac, res] = ass_unifstrains (elements, coordinates, nx, ny, lx, ly, u_n);
+
+%figure();
+%spy(jac)
+%print -djpg filename.jpg 
