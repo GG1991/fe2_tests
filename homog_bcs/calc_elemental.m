@@ -9,5 +9,4 @@ ejac = zeros(dim*npe, dim*npe);
 eres = zeros(dim*npe, 1);
 
 
-
 endfunction
