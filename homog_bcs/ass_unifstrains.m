@@ -1,9 +1,10 @@
 %  ensambla el Jacobiano (J) y el residuo (r)
 
-function [jac, res] = assembly_unif_strains (nx, ny, dx, dy)
+function [jac, res] = ass_unifstrains (elements, nx, ny, dx, dy)
 
 nnods = nx*ny;
 dim = 2;
+npe = size(elements, 2);
 
 wg = [0.25 , 0.25, 0.25 , 0.25];
 
@@ -29,10 +30,10 @@ res = zeros(dim*nnods, 1);
 
 for e = 1 : size(elements, 1) 
 
-    [ejac, eres] = calc_elemental (e, xg, wg, dsh)
+    [ejac, eres] = calc_elemental (e, xg, wg, dsh);
 
-    jac(elements(e,:), elements(e,:)) += ejac;
-    res(elements(e,:), 1) += eres;
+    jac([elements(e,:)*dim,(elements(e,:)*dim) - 1], [elements(e,:)*dim,(elements(e,:)*dim)]) += ejac;
+    res([elements(e,:)*dim,(elements(e,:)*dim) - 1]) += eres;
 
 end
 
