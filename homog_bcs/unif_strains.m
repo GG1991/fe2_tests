@@ -1,5 +1,5 @@
-nx = 10;
-ny = 10;
+nx = 3;
+ny = 3;
 lx = 3;
 ly = 3;
 dx = lx / (nx - 1);
@@ -34,11 +34,12 @@ bc_y0 = [1 : 1 : nx];
 bc_y1 = [(ny-1)*nx + 1 : 1 : nx*ny];
 bc_x0 = [nx + 1 : nx : (ny-2)*nx + 1];
 bc_x1 = [2*nx : nx : (ny-1)*nx];
-bc_index = [bc_y0, bc_y1, bc_x0, bc_x1];
+bc_nods = [bc_y0, bc_y1, bc_x0, bc_x1];
 
 dir_n = zeros(nx*ny*dim, 1);
+strain_exp = [ 0.005 0 0; 0 0.005 0; 0 0 0.005]';
 
-[jac, res] = ass_unifstrains (elements, coordinates, nx, ny, lx, ly, u_n);
+[jac, res] = ass_unifstrains (elements, coordinates, bc_nods, strain_exp(:,1), nx, ny, lx, ly, u_n);
 
 %figure();
 %spy(jac)
