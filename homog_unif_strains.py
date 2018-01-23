@@ -10,10 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math as math
 
-############################################################
-#
-# creates elemental matrix
-#
+#------------------------
 def elem_matrix(ke):
 
   ke.fill(0.0)
@@ -28,10 +25,8 @@ def elem_matrix(ke):
     ke += reduce(np.dot,[B.transpose(),C,B])*wp[gp]*area
 
   return;
-############################################################
-#
-# creates elemental residue
-#
+
+#------------------------
 def elem_residue(e, elem, x, be):
 
   be.fill(0.0)
@@ -56,10 +51,8 @@ def elem_residue(e, elem, x, be):
 
   return;
 
-############################################################
-#
-# main program
-#
+#------------------------
+
 nx = 2
 ny = 2 
 lx = 1.0
@@ -86,20 +79,13 @@ for gp in range(0, xp.shape[0]):
   dsh[2,0,gp] = +0.5*(0+xp[gp,1])/hx; dsh[2,1,gp] = (0+xp[gp,0])*+0.5/hy
   dsh[3,0,gp] = -0.5*(0+xp[gp,1])/hx; dsh[3,1,gp] = (1-xp[gp,0])*+0.5/hy
 
-# define constitutive tensor
 nu = 0.3; E  = 1e6
-#C = np.array([
-#    [1         ,nu/(1-nu) ,0                  ],
-#    [nu/(1-nu) ,1         ,0                  ],
-#    [0         ,0         ,(1-2*nu)/(2*(1-nu))]
-#])
-#C = np.multiply(C,E*(1-nu)/((1+nu)*(1-2*nu)))
 C = np.array([
-    [1         ,nu        ,0                  ],
-    [nu        ,1         ,0                  ],
-    [0         ,0         ,(1-nu)/2           ]
+    [1-nu      ,nu        ,0          ],
+    [nu        ,1-nu      ,0          ],
+    [0         ,0         ,(1-2*nu)/2 ]
 ])
-C = np.multiply(C,E/(1-nu*nu))
+C = np.multiply(C, E / ((1 + nu)*(1 - 2*nu)))
 
 J  = np.zeros( (nx*ny*2 + n_bc*2,nx*ny*2 + n_bc*2) )
 x  = np.zeros( nx*ny*2 + n_bc*2 )
@@ -116,21 +102,21 @@ coor = np.zeros( (nnod,2) )
 
 for i in range(0, ny-1):
   for j in range(0,nx-1):
-    elem[i*(nx-1)+j,0] = j    + i*nx
-    elem[i*(nx-1)+j,1] = j+1  + i*nx
-    elem[i*(nx-1)+j,2] = j+1  + (i+1)*nx
-    elem[i*(nx-1)+j,3] = j    + (i+1)*nx
+    elem[i*(nx-1)+j, 0] = j    + i*nx
+    elem[i*(nx-1)+j, 1] = j+1  + i*nx
+    elem[i*(nx-1)+j, 2] = j+1  + (i+1)*nx
+    elem[i*(nx-1)+j, 3] = j    + (i+1)*nx
 
 for i in range(0, ny):
   for j in range(0,nx):
-    coor[i*nx+j,0] = j*hx
-    coor[i*nx+j,1] = i*hy
+    coor[i*nx+j, 0] = j*hx
+    coor[i*nx+j, 1] = i*hy
 
 # Boundary nodes index
-y0_ind = np.arange(2          ,nx*2-2,2)
-x1_ind = np.arange((nx-1)*2   ,ny*nx*2,nx*2)
+y0_ind = np.arange(2              ,nx*2-2,2)
+x1_ind = np.arange((nx-1)*2       ,ny*nx*2,nx*2)
 y1_ind = np.arange(((ny-1)*nx+1)*2,ny*nx*2-2,2)
-x0_ind = np.arange(0          ,ny*nx*2,nx*2)
+x0_ind = np.arange(0              ,ny*nx*2,nx*2)
 
 bc_nods = np.sort(np.concatenate((y0_ind, x1_ind, y1_ind, x0_ind))/2)
 bc_inds = np.zeros(bc_nods.size*2, dtype=np.int)
@@ -159,13 +145,13 @@ elem_matrix( ke )
 index = np.zeros(4*2, dtype=np.int)
 for e in range(0, elem.shape[0]):
   for n in range( 0, 4):
-    index[[n*2+0, n*2+1]] = [elem[e,n]*2+0,elem[e,n]*2+1]
+    index[[n*2+0, n*2+1]] = [elem[e,n]*2+0, elem[e,n]*2+1]
   J[np.ix_(index,index)] += ke
 
 # set BCs on J
 J[bc_inds[:], nx*ny*2 + np.arange(bc_inds.size)] = -1.0;
 J[nx*ny*2 + np.arange(bc_inds.size), bc_inds[:]] = +1.0;
-print "J ",J
+#print "J ",J
 
 # assembly b 
 b.fill(0.0)
@@ -200,17 +186,27 @@ b[nx*ny*2 + np.arange(bc_inds.size)] = u_bc - np.transpose(np.dot(D.transpose(),
 b = -b
 dx = np.linalg.solve(J, b)
 x = x + dx
+
 print
 print "|b|",np.linalg.norm(b),"\n"
-print "u_bc", u_bc
-print "b",b
+#print "u_bc", u_bc
+#print "b",b
 print "forces",x[nnod*2:], "\n"
 
 # plot the matrix
-plt.matshow(J)
+#plt.matshow(J)
 #plt.show()
 
 #print "elem",elem, "\n"
 #print "coor",coor, "\n"
 
-############################################################
+X, Y = np.meshgrid(np.arange(0, 2 * np.pi, .2), np.arange(0, 2 * np.pi, .2))
+U = np.cos(X)
+V = np.sin(Y)
+
+plt.figure()
+plt.title('Arrows scale with plot width, not view')
+Q = plt.quiver(X, Y, U, V, units='width')
+qk = plt.quiverkey(Q, 0.9, 0.9, 2, r'$2 \frac{m}{s}$', labelpos='E', coordinates='figure')
+
+plt.show()
