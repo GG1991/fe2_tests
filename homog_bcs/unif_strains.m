@@ -30,6 +30,14 @@ end
 
 u_n = zeros(nx*ny*dim, 1);
 
+bc_y0 = [1 : 1 : nx];
+bc_y1 = [(ny-1)*nx + 1 : 1 : nx*ny];
+bc_x0 = [nx + 1 : nx : (ny-2)*nx + 1];
+bc_x1 = [2*nx : nx : (ny-1)*nx];
+bc_index = [bc_y0, bc_y1, bc_x0, bc_x1];
+
+dir_n = zeros(nx*ny*dim, 1);
+
 [jac, res] = ass_unifstrains (elements, coordinates, nx, ny, lx, ly, u_n);
 
 %figure();
