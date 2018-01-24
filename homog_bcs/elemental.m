@@ -1,6 +1,14 @@
 % fiber in the middle of a circle, structured mesh
 
-function [jac_e, res_e] = elemental (e, elements, coordinates, lx, ly, xg, wg, dsh, b_mat, u_e)
+function [jac_e, res_e] = elemental (e, u_e)
+
+global elements
+global coordinates
+global lx
+global ly
+global xg
+global wg
+global b_mat
 
 dim = 2;
 npe = 4;
