@@ -26,8 +26,10 @@ for e = 1 : size(elements, 1)
     u_e = u_n([elements(e, :)*dim - 1, elements(e, :)*dim]);
     [jac_e, res_e] = elemental (e, u_e);
 
-    jac([elements(e,:)*dim - 1, elements(e,:)*dim], [elements(e,:)*dim - 1, elements(e,:)*dim]) += jac_e;
-    res([elements(e,:)*dim - 1, elements(e,:)*dim]) += res_e;
+    jac([elements(e,:)*dim - 1], [elements(e,:)*dim - 1]) += jac_e([1:2:size(jac_e,1)],[1:2:size(jac_e,1)]);
+    jac([elements(e,:)*dim + 0], [elements(e,:)*dim + 0]) += jac_e([2:2:size(jac_e,1)],[2:2:size(jac_e,1)]);
+    res([elements(e,:)*dim - 1]) += res_e([1:2:size(res_e,1)]);
+    res([elements(e,:)*dim + 0]) += res_e([2:2:size(res_e,1)]);
 
 end
 
