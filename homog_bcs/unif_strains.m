@@ -35,15 +35,15 @@ dir_n = zeros(nx*ny*dim, 1);
 strain_exp = [0.005 0 0; 0 0.005 0; 0 0 0.005]';
 
 [jac, res] = ass_unifstrains (bc_nods, strain_exp(:,1), u_n);
-res
+printf ("\033[32m|res| = %f\n\033[0m", norm(res));
 
 du = jac\(-res);
-u = u_n + du
+u = u_n + du;
 
 [jac, res] = ass_unifstrains (bc_nods, strain_exp(:,1), u);
-res
+printf ("\033[32m|res| = %f\n\033[0m", norm(res));
 
 figure();
 spy(jac); print -djpg spy.jpg 
-%quiver(coordinates(:,1), coordinates(:,2), u(1:2:nx*ny*2), u(2:2:nx*ny*2))
+quiver(coordinates(:,1), coordinates(:,2), u(1:2:nx*ny*2), u(2:2:nx*ny*2)); print -djpg sol.jpg
 
