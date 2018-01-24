@@ -18,12 +18,13 @@ global dy
 global npe
 global dim
 global nvoi
+global nelem
 
 u_e = zeros(npe*dim,1);
 jac = sparse(dim*nnods, dim*nnods);
 res = zeros(dim*nnods, 1);
 
-for e = 1 : size(elements, 1) 
+for e = 1 : nelem 
 
     u_e([1:2:npe*dim]) = u_n([elements(e, :)*dim - 1]); %set x vals
     u_e([2:2:npe*dim]) = u_n([elements(e, :)*dim + 0]); %set y vals

@@ -28,6 +28,12 @@ for i = 1 : (ny-1)
   end
 end
 
+bc_y0 = [1 : 1 : nx];
+bc_y1 = [(ny-1)*nx + 1 : 1 : nx*ny];
+bc_x0 = [nx + 1 : nx : (ny-2)*nx + 1];
+bc_x1 = [2*nx : nx : (ny-1)*nx];
+bc_nods = [bc_y0, bc_y1, bc_x0, bc_x1]';
+
 coordinates = zeros(nx*ny, dim);
 for i = 1 : ny
   for j = 1 : nx
@@ -45,25 +51,18 @@ xg = [ -0.577350269189626, -0.577350269189626;
 
 dsh = zeros(npe, dim, npe);
 for gp = 1 : npe
-   dsh(1,1,gp) = -1 * (1 - xg(gp,2)) /4 * 2/dx;
-   dsh(2,1,gp) = +1 * (1 - xg(gp,2)) /4 * 2/dx;
-   dsh(3,1,gp) = +1 * (1 + xg(gp,2)) /4 * 2/dx;
-   dsh(4,1,gp) = -1 * (1 + xg(gp,2)) /4 * 2/dx;
-   dsh(1,2,gp) = -1 * (1 - xg(gp,1)) /4 * 2/dy;
-   dsh(2,2,gp) = -1 * (1 + xg(gp,1)) /4 * 2/dy;
-   dsh(3,2,gp) = +1 * (1 + xg(gp,1)) /4 * 2/dy;
-   dsh(4,2,gp) = +1 * (1 - xg(gp,1)) /4 * 2/dy;
+   dsh(1,:,gp) = [-1 * (1 - xg(gp,2)) /4 * 2/dx , -1 * (1 - xg(gp,1)) /4 * 2/dy];
+   dsh(2,:,gp) = [+1 * (1 - xg(gp,2)) /4 * 2/dx , -1 * (1 + xg(gp,1)) /4 * 2/dy];
+   dsh(3,:,gp) = [+1 * (1 + xg(gp,2)) /4 * 2/dx , +1 * (1 + xg(gp,1)) /4 * 2/dy];
+   dsh(4,:,gp) = [-1 * (1 + xg(gp,2)) /4 * 2/dx , +1 * (1 - xg(gp,1)) /4 * 2/dy];
 end
 
 b_mat = zeros(nvoi, npe*dim, npe);
 for gp = 1 : npe
   for i = 1 : npe
-      b_mat(1, i*dim - 1, gp) = dsh(i, 1, gp);
-      b_mat(1, i*dim + 0, gp) = 0;
-      b_mat(2, i*dim - 1, gp) = 0;
-      b_mat(2, i*dim + 0, gp) = dsh(i, 2, gp);
-      b_mat(3, i*dim - 1, gp) = dsh(i, 2, gp);
-      b_mat(3, i*dim + 0, gp) = dsh(i, 1, gp);
+      b_mat(1, [i*dim - 1, i*dim + 0], gp) = [dsh(i, 1, gp), 0            ];
+      b_mat(2, [i*dim - 1, i*dim + 0], gp) = [0            , dsh(i, 2, gp)];
+      b_mat(3, [i*dim - 1, i*dim + 0], gp) = [dsh(i, 2, gp), dsh(i, 1, gp)];
   end
 end
 

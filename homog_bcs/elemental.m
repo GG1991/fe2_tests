@@ -11,6 +11,8 @@ global wg
 global b_mat
 global dim
 global npe
+global strain
+global stress
 
 jac_e = zeros(dim*npe, dim*npe);
 res_e = zeros(dim*npe, 1);
@@ -27,10 +29,15 @@ c_tan = [ 1-nu , nu   , 0           ;
 
 c_tan = c_tan * E / ((1 + nu)*(1 - 2*nu));
 
+strain(e,:) = [0.0 0.0 0.0];
+stress(e,:) = [0.0 0.0 0.0];
+
 for gp = 1 : npe
 
   strain_gp = b_mat(:, :, gp) * u_e;
   stress_gp = c_tan * strain_gp;
+  strain(e,:) += strain_gp' * wg(gp);
+  stress(e,:) += stress_gp' * wg(gp);
   res_e += b_mat(:, :, gp)' * stress_gp * wg(gp);
   jac_e += b_mat(:, :, gp)' * c_tan * b_mat(:, :, gp) * wg(gp);
 
