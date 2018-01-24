@@ -1,5 +1,9 @@
-
 function dist_val = distance (e, elements, coordinates, lx, ly)
+
+global elements
+global coordinates
+global lx
+global ly
 
 center = [lx / 2, ly / 2];
 centroid = [0.0, 0.0];

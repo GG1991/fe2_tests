@@ -9,15 +9,14 @@ global ly
 global xg
 global wg
 global b_mat
-
-dim = 2;
-npe = 4;
+global dim
+global npe
 
 jac_e = zeros(dim*npe, dim*npe);
 res_e = zeros(dim*npe, 1);
 
 nu = 0.3;
-if ( distance(e, elements, coordinates, lx, ly) < 0.4 )
+if ( distance(e) < 0.4 )
   E  = 1e7;
 else
   E  = 1e6;

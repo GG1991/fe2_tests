@@ -38,9 +38,10 @@ strain_exp = [0.005 0 0; 0 0.005 0; 0 0 0.005]';
 printf ("\033[32m|res| = %f\n\033[0m", norm(res));
 
 du = jac\(-res);
-u = u_n + du;
+u = u_n + du
 
 [jac, res] = ass_unifstrains (bc_nods, strain_exp(:,1), u);
+res
 printf ("\033[32m|res| = %f\n\033[0m", norm(res));
 
 figure();
