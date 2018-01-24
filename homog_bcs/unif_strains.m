@@ -7,8 +7,8 @@ global b_mat
 global stress
 global strain
 
-global nx = 4;
-global ny = 4;
+global nx = 10;
+global ny = 10;
 global nelem = (nx-1)*(ny-1)
 global nnods = nx*ny;
 global lx = 3;
@@ -43,51 +43,16 @@ u = u + du;
 [jac, res] = ass_unifstrains (strain_exp(:,1), u);
 printf ("\033[32m|res| = %f\n\033[0m", norm(res));
 
-du = -(jac\res);
-u = u + du;
-
-[jac, res] = ass_unifstrains (strain_exp(:,1), u);
-printf ("\033[32m|res| = %f\n\033[0m", norm(res));
-
-du = -(jac\res);
-u = u + du;
-
-[jac, res] = ass_unifstrains (strain_exp(:,1), u);
-printf ("\033[32m|res| = %f\n\033[0m", norm(res));
-
-du = -(jac\res);
-u = u + du;
-
-[jac, res] = ass_unifstrains (strain_exp(:,1), u);
-printf ("\033[32m|res| = %f\n\033[0m", norm(res));
-
-du = -(jac\res);
-u = u + du;
-
-[jac, res] = ass_unifstrains (strain_exp(:,1), u);
-printf ("\033[32m|res| = %f\n\033[0m", norm(res));
-du = -(jac\res);
-u = u + du;
-
-[jac, res] = ass_unifstrains (strain_exp(:,1), u);
-printf ("\033[32m|res| = %f\n\033[0m", norm(res));
-
-du = -(jac\res);
-u = u + du;
-
-[jac, res] = ass_unifstrains (strain_exp(:,1), u);
-printf ("\033[32m|res| = %f\n\033[0m", norm(res));
-
-[strain_ave, stress_ave] = average();
+[strain_ave, stress_ave] = average()
 
 %res
 
 %strain
 %stress
 
-%figure();
+figure();
 %spy(jac); print -djpg spy.jpg 
-%quiver(coordinates(:,1), coordinates(:,2), u(1:2:nx*ny*2), u(2:2:nx*ny*2)); print -djpg sol.jpg
+quiver(coordinates(:,1), coordinates(:,2), u(1:2:nx*ny*2), u(2:2:nx*ny*2)); print -djpg sol.jpg
 
 %x = coordinates(1:(nx-1)*(ny-1),1);
 %y = coordinates(1:(nx-1)*(ny-1),2);
