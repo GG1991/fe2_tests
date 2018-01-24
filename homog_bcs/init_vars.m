@@ -2,6 +2,7 @@ function init_vars()
 
 global elements
 global coordinates
+global bc_nods
 global xg
 global wg
 global b_mat

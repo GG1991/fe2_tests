@@ -1,5 +1,6 @@
 global elements
 global coordinates
+global bc_nods
 global xg
 global wg
 global b_mat
@@ -34,16 +35,14 @@ bc_nods = [bc_y0, bc_y1, bc_x0, bc_x1]';
 dir_n = zeros(nx*ny*dim, 1);
 strain_exp = [0.005 0 0; 0 0.005 0; 0 0 0.005]';
 
-[jac, res] = ass_unifstrains (bc_nods, strain_exp(:,1), u);
+[jac, res] = ass_unifstrains (strain_exp(:,1), u);
 printf ("\033[32m|res| = %f\n\033[0m", norm(res));
-res
 
 du = jac\(-res);
 u = u_n + du;
 
-[jac, res] = ass_unifstrains (bc_nods, strain_exp(:,1), u);
+[jac, res] = ass_unifstrains (strain_exp(:,1), u);
 printf ("\033[32m|res| = %f\n\033[0m", norm(res));
-res
 
 figure();
 spy(jac); print -djpg spy.jpg 

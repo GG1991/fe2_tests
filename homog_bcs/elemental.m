@@ -31,8 +31,8 @@ for gp = 1 : npe
 
   strain_gp = b_mat(:, :, gp) * u_e;
   stress_gp = c_tan * strain_gp;
-  res_e += b_mat(:, :, gp)' * stress_gp;
-  jac_e += b_mat(:, :, gp)' * c_tan * b_mat(:, :, gp);
+  res_e += b_mat(:, :, gp)' * stress_gp * wg(gp);
+  jac_e += b_mat(:, :, gp)' * c_tan * b_mat(:, :, gp) * wg(gp);
 
 end
 
