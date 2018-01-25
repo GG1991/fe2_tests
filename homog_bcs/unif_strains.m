@@ -1,5 +1,6 @@
 global elements
 global coordinates
+global elem_type
 global bc_nods
 global xg
 global wg
@@ -7,8 +8,8 @@ global b_mat
 global stress
 global strain
 
-global nx = 10;
-global ny = 10;
+global nx = 4;
+global ny = 4;
 global nelem = (nx-1)*(ny-1)
 global nnods = nx*ny;
 global lx = 3;
@@ -21,6 +22,8 @@ global dim = 2;
 global nvoi = 3;
 
 init_vars();
+
+elem_type = zeros(nelem, 1);
 
 #elements
 #coordinates
@@ -67,3 +70,4 @@ quiver(coordinates(:,1), coordinates(:,2), u(1:2:nx*ny*2), u(2:2:nx*ny*2)); prin
 %M = max(Z(Z~=0));
 %imshow((Z-m)/(M-m)); print -djpg map.jpg
 %imshow(Z); print -djpg map.jpg
+write_vtk("sol.vtk", u)

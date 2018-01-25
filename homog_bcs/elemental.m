@@ -4,6 +4,7 @@ function [jac_e, res_e] = elemental (e, u_e)
 
 global elements
 global coordinates
+global elem_type
 global lx
 global ly
 global xg
@@ -19,8 +20,10 @@ res_e = zeros(dim*npe, 1);
 
 nu = 0.3;
 if ( distance(e) < 0.4 )
+  elem_type(e) = 2;
   E  = 1e7;
 else
+  elem_type(e) = 1;
   E  = 1e6;
 end
 c_tan = [ 1-nu , nu   , 0           ;
