@@ -11,6 +11,7 @@ global wg
 global b_mat
 global stress
 global strain
+global res
 
 global nx = 3;
 global ny = 3;
@@ -42,24 +43,24 @@ strain_exp = [0.005 0 0; 0 0.005 0; 0 0 0.005]';
 
 c_ave = zeros(3,3);
 
-for i = 1 : 1
+%for i = 1 : 1
 
 u = zeros(nx*ny*dim, 1);
-printf ("\033[31mstrain = %f %f %f\n\033[0m", strain_exp(:,i)');
+%printf ("\033[31mstrain = %f %f %f\n\033[0m", strain_exp(:,i)');
 
-[jac, res] = ass_periodic (strain_exp(:,i), u);
+[jac, res] = ass_periodic (strain_exp(:,2), u);
 printf ("\033[32m|res| = %f\n\033[0m", norm(res));
 
 du = -(jac\res);
 u = u + du;
 
-[jac, res] = ass_periodic (strain_exp(:,i), u);
+[jac, res] = ass_periodic (strain_exp(:,2), u);
 printf ("\033[32m|res| = %f\n\033[0m", norm(res));
 
 %[strain_ave, stress_ave] = average();
 %c_ave(:,i) = stress_ave' / strain_ave(i);
 
-end
+%end
 
 %printf ("\n");
 %c_ave

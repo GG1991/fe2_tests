@@ -7,6 +7,7 @@ global nnods
 global nelem
 global strain
 global stress
+global res
 global dim
 
 fm = fopen (file_name, "w");
@@ -33,6 +34,11 @@ fprintf(fm, 'VECTORS disp FLOAT\n');
 %fprintf(fm, 'LOOKUP_TABLE default\n');
 for n = 1 : nnods
    fprintf(fm,'%f %f 0.0\n',u_vec([n*dim - 1, n*dim + 0]));
+end
+fprintf(fm, 'VECTORS residue FLOAT\n');
+%fprintf(fm, 'LOOKUP_TABLE default\n');
+for n = 1 : nnods
+   fprintf(fm,'%f %f 0.0\n',res([n*dim - 1, n*dim + 0]));
 end
 
 fprintf(fm, 'CELL_DATA %d\n', nelem);

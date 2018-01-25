@@ -57,7 +57,7 @@ jac([bc_x0*dim - 1; bc_x0*dim - 0], :) = 0.0;
 auxs = [0, 0];
 for n = 1 : size(bc_y0, 2)
   for d = 0 : 1
-    auxs = [full(jac)(bc_y1(n)*dim - d, bc_y0(n)*dim - d), full(jac)(bc_y1(n)*dim - d, bc_y1(n)*dim - d)];
+    auxs = [jac(bc_y1(n)*dim - d, bc_y0(n)*dim - d), jac(bc_y1(n)*dim - d, bc_y1(n)*dim - d)];
     jac(bc_y0(n)*dim - d, bc_y1(n)*dim - d) = +1.0;
     jac(bc_y0(n)*dim - d, bc_y0(n)*dim - d) = -1.0;
 
