@@ -38,11 +38,10 @@ for e = 1 : nelem
 
 end
 
-%mid_nod = nx*(ny/2)
-mid_nod = nx*20
+mid_nod = nx*(ny/2);
 
 u_dif_y0 = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * [0.0, ly]';
-u_dif_x0 = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * [lx , 0.0]'
+u_dif_x0 = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * [lx , 0.0]';
 
 res([bc_y0*dim - 1]) = u_n([bc_y1*dim - 1]) - u_n([bc_y0*dim - 1]) - u_dif_y0(1); %set x vals
 res([bc_y0*dim - 0]) = u_n([bc_y1*dim - 0]) - u_n([bc_y0*dim - 0]) - u_dif_y0(2); %set y vals

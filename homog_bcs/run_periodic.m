@@ -13,8 +13,8 @@ global stress
 global strain
 global res
 
-global nx = 41;
-global ny = 41;
+global nx = 11;
+global ny = 11;
 global nelem = (nx-1)*(ny-1)
 global nnods = nx*ny;
 global lx = 3;
