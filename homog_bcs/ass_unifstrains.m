@@ -45,7 +45,7 @@ end
 
 u_d = zeros(size(bc_nods, 1)*dim, 1);
 for n = 1 : size(bc_nods, 1)
-  u_d([n*dim - 1, n*dim]) = [strain_mac(1) strain_mac(3) ; strain_mac(3) strain_mac(2)] * coordinates(bc_nods(n), :)';
+  u_d([n*dim - 1, n*dim]) = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * coordinates(bc_nods(n), :)';
 end
 
 res([bc_nods*dim - 1]) = u_n([bc_nods*dim - 1]) - u_d([1:2:size(u_d,1)]); %set x vals

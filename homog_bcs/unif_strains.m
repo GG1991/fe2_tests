@@ -37,37 +37,29 @@ stress = zeros((nx-1)*(ny-1), nvoi);
 dir_n = zeros(nx*ny*dim, 1);
 strain_exp = [0.005 0 0; 0 0.005 0; 0 0 0.005]';
 
-[jac, res] = ass_unifstrains (strain_exp(:,1), u);
+c_ave = zeros(3,3);
+
+for i = 1 : 3
+
+[jac, res] = ass_unifstrains (strain_exp(:,i), u);
 printf ("\033[32m|res| = %f\n\033[0m", norm(res));
 
 du = -(jac\res);
 u = u + du;
 
-[jac, res] = ass_unifstrains (strain_exp(:,1), u);
+[jac, res] = ass_unifstrains (strain_exp(:,i), u);
 printf ("\033[32m|res| = %f\n\033[0m", norm(res));
 
 [strain_ave, stress_ave] = average()
+c_ave(:,i) = stress_ave' / strain_ave(i);
+
+end
+
+c_ave
 
 %res
 
-%strain
-%stress
-
 figure();
-%spy(jac); print -djpg spy.jpg 
-quiver(coordinates(:,1), coordinates(:,2), u(1:2:nx*ny*2), u(2:2:nx*ny*2)); print -djpg sol.jpg
+spy(jac); print -djpg spy.jpg 
 
-%x = coordinates(1:(nx-1)*(ny-1),1);
-%y = coordinates(1:(nx-1)*(ny-1),2);
-%z = stress(:,1)
-%size(x)
-%size(y)
-%size(z)
-%n = 9;
-%[X, Y] = meshgrid(linspace(min(x),max(x),n), linspace(min(y),max(y),n));
-%Z = griddata(x,y,z,X,Y);
-%m = min(Z(Z~=0));
-%M = max(Z(Z~=0));
-%imshow((Z-m)/(M-m)); print -djpg map.jpg
-%imshow(Z); print -djpg map.jpg
 write_vtk("sol.vtk", u)

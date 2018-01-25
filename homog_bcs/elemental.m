@@ -19,7 +19,7 @@ jac_e = zeros(dim*npe, dim*npe);
 res_e = zeros(dim*npe, 1);
 
 nu = 0.3;
-if ( distance(e) < 0.4 )
+if ( distance(e) < 0.75 )
   elem_type(e) = 2;
   E  = 1e7;
 else
