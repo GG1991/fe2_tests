@@ -27,8 +27,7 @@ for e = 1 : nelem
     end
 
     jac(ind, ind) += jac_e;
-    res([elements(e,:)*dim - 1]) += res_e([1:2:size(res_e,1)]); %set x vals
-    res([elements(e,:)*dim + 0]) += res_e([2:2:size(res_e,1)]); %set y vals
+    res(ind) += res_e;
 
 end
 

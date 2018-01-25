@@ -7,9 +7,10 @@ global wg
 global b_mat
 global stress
 global strain
+global res
 
-global nx = 75;
-global ny = 75;
+global nx = 10;
+global ny = 10;
 global nelem = (nx-1)*(ny-1)
 global nnods = nx*ny;
 global lx = 3;
