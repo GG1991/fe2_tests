@@ -12,8 +12,8 @@ global b_mat
 global stress
 global strain
 
-global nx = 4;
-global ny = 4;
+global nx = 3;
+global ny = 3;
 global nelem = (nx-1)*(ny-1)
 global nnods = nx*ny;
 global lx = 3;
@@ -42,29 +42,29 @@ strain_exp = [0.005 0 0; 0 0.005 0; 0 0 0.005]';
 
 c_ave = zeros(3,3);
 
-for i = 1 : 3
+for i = 1 : 1
 
 u = zeros(nx*ny*dim, 1);
 printf ("\033[31mstrain = %f %f %f\n\033[0m", strain_exp(:,i)');
 
-[jac, res] = ass_unifstrains (strain_exp(:,i), u);
+[jac, res] = ass_periodic (strain_exp(:,i), u);
 printf ("\033[32m|res| = %f\n\033[0m", norm(res));
 
 du = -(jac\res);
 u = u + du;
 
-[jac, res] = ass_unifstrains (strain_exp(:,i), u);
+[jac, res] = ass_periodic (strain_exp(:,i), u);
 printf ("\033[32m|res| = %f\n\033[0m", norm(res));
 
-[strain_ave, stress_ave] = average();
-c_ave(:,i) = stress_ave' / strain_ave(i);
+%[strain_ave, stress_ave] = average();
+%c_ave(:,i) = stress_ave' / strain_ave(i);
 
 end
 
-printf ("\n");
-c_ave
+%printf ("\n");
+%c_ave
 
-%figure();
-%spy(jac); print -djpg spy.jpg 
+figure();
+spy(jac); print -djpg spy.jpg 
 
 write_vtk("sol.vtk", u)

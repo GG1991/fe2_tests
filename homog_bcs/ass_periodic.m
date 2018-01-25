@@ -3,6 +3,12 @@ function [jac, res] = ass_periodic (strain_mac, u_n)
 global elements
 global coordinates
 global bc_nods
+global bc_y0
+global bc_y1
+global bc_x0
+global bc_x1
+global lx
+global ly
 global nnods
 global npe
 global dim
@@ -31,19 +37,53 @@ for e = 1 : nelem
 
 end
 
-u_d = zeros(size(bc_nods, 1)*dim, 1);
-for n = 1 : size(bc_nods, 1)
-  u_d([n*dim - 1, n*dim]) = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * coordinates(bc_nods(n), :)';
+u_dif_y0 = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * [0.0, ly]';
+u_dif_x0 = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * [lx , 0.0]';
+
+res([bc_y1*dim - 1]) = res([bc_y1*dim - 1]) + res([bc_y0*dim - 1]); %set x vals
+res([bc_y1*dim - 0]) = res([bc_y1*dim - 0]) + res([bc_y0*dim - 0]); %set y vals
+res([bc_x1*dim - 1]) = res([bc_x1*dim - 1]) + res([bc_x0*dim - 1]); %set x vals
+res([bc_x1*dim - 0]) = res([bc_x1*dim - 0]) + res([bc_x0*dim - 0]); %set y vals
+
+res([bc_y0*dim - 1]) = u_n([bc_y1*dim - 1]) - u_n([bc_y0*dim - 1]) - u_dif_y0(1); %set x vals
+res([bc_y0*dim - 0]) = u_n([bc_y1*dim - 0]) - u_n([bc_y0*dim - 0]) - u_dif_y0(2); %set y vals
+res([bc_x0*dim - 1]) = u_n([bc_x1*dim - 1]) - u_n([bc_x0*dim - 1]) - u_dif_x0(1); %set x vals
+res([bc_x0*dim - 0]) = u_n([bc_x1*dim - 0]) - u_n([bc_x0*dim - 0]) - u_dif_x0(2); %set y vals
+
+res([bc_y0(1)*dim - 1, bc_y0(1)*dim + 0]) = u_n([bc_y0(1)*dim - 1, bc_y0(1)*dim + 0]) - [0.0, 0.0]'
+
+jac([bc_y0*dim - 1; bc_y0*dim - 0], :) = 0.0;
+jac([bc_x0*dim - 1; bc_x0*dim - 0], :) = 0.0;
+auxs = [0, 0];
+for n = 1 : size(bc_y0, 2)
+  for d = 0 : 1
+    auxs = [full(jac)(bc_y1(n)*dim - d, bc_y0(n)*dim - d), full(jac)(bc_y1(n)*dim - d, bc_y1(n)*dim - d)];
+    jac(bc_y0(n)*dim - d, bc_y1(n)*dim - d) = +1.0;
+    jac(bc_y0(n)*dim - d, bc_y0(n)*dim - d) = -1.0;
+
+    jac(bc_y1(n)*dim - d, :) = 0.0;
+
+    jac(bc_y1(n)*dim - d, bc_y0(n)*dim - d) = auxs(1);
+    jac(bc_y1(n)*dim - d, bc_y1(n)*dim - d) = auxs(2);
+  end
 end
 
-res([bc_nods*dim - 1]) = u_n([bc_nods*dim - 1]) - u_d([1:2:size(u_d,1)]); %set x vals
-res([bc_nods*dim + 0]) = u_n([bc_nods*dim + 0]) - u_d([2:2:size(u_d,1)]); %set y vals
-
-jac([bc_nods*dim - 1; bc_nods*dim], :) = 0.0;
-for n = 1 : size(bc_nods, 1)
+for n = 1 : size(bc_x0, 2)
   for d = 0 : 1
-    jac(bc_nods(n)*dim - d, bc_nods(n)*dim - d) = 1.0;
+    auxs = [jac(bc_x1(n)*dim - d, bc_x0(n)*dim - d), jac(bc_x1(n)*dim - d, bc_x1(n)*dim - d)];
+    jac(bc_x0(n)*dim - d, bc_x1(n)*dim - d) = +1.0;
+    jac(bc_x0(n)*dim - d, bc_x0(n)*dim - d) = -1.0;
+
+    jac(bc_x1(n)*dim - d, :) = 0.0;
+
+    jac(bc_x1(n)*dim - d, bc_x0(n)*dim - d) = auxs(1);
+    jac(bc_x1(n)*dim - d, bc_x1(n)*dim - d) = auxs(2);
   end
+end
+
+jac([bc_y0(1)*dim - 1; bc_y0(1)*dim - 0], :) = 0.0;
+for d = 0 : 1
+ jac(bc_y0(1)*dim - d, bc_y0(1)*dim - d) = 1.0;
 end
 
 endfunction
