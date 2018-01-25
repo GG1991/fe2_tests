@@ -1,5 +1,3 @@
-addpath ("../.")
-
 global elements
 global coordinates
 global elem_type
@@ -10,8 +8,8 @@ global b_mat
 global stress
 global strain
 
-global nx = 4;
-global ny = 4;
+global nx = 75;
+global ny = 75;
 global nelem = (nx-1)*(ny-1)
 global nnods = nx*ny;
 global lx = 3;
@@ -31,7 +29,6 @@ elem_type = zeros(nelem, 1);
 #coordinates
 #bc_nods
 
-u = zeros(nx*ny*dim, 1);
 du = zeros(nx*ny*dim, 1);
 strain = zeros((nx-1)*(ny-1), nvoi);
 stress = zeros((nx-1)*(ny-1), nvoi);
@@ -43,6 +40,9 @@ c_ave = zeros(3,3);
 
 for i = 1 : 3
 
+u = zeros(nx*ny*dim, 1);
+printf ("\033[31mstrain = %f %f %f\n\033[0m", strain_exp(:,i)');
+
 [jac, res] = ass_unifstrains (strain_exp(:,i), u);
 printf ("\033[32m|res| = %f\n\033[0m", norm(res));
 
@@ -52,16 +52,15 @@ u = u + du;
 [jac, res] = ass_unifstrains (strain_exp(:,i), u);
 printf ("\033[32m|res| = %f\n\033[0m", norm(res));
 
-[strain_ave, stress_ave] = average()
+[strain_ave, stress_ave] = average();
 c_ave(:,i) = stress_ave' / strain_ave(i);
 
 end
 
+printf ("\n");
 c_ave
 
-%res
-
-figure();
-spy(jac); print -djpg spy.jpg 
+%figure();
+%spy(jac); print -djpg spy.jpg 
 
 write_vtk("sol.vtk", u)
