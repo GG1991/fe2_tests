@@ -1,23 +1,12 @@
-%  ensambla el Jacobiano (J) y el residuo (r)
-
 function [jac, res] = ass_unifstrains (strain_mac, u_n)
 
 global elements
 global coordinates
 global bc_nods
-global xg
-global wg
 global b_mat
-global nx
-global ny
 global nnods
-global lx
-global ly
-global dx
-global dy
 global npe
 global dim
-global nvoi
 global nelem
 
 u_e = zeros(npe*dim,1);
