@@ -2,8 +2,8 @@ global elements
 global coordinates
 global elem_type
 global bc_nods
-global bc_y0
-global bc_y1
+global bc_y0_per
+global bc_y1_per
 global bc_x0
 global bc_x1
 global xg
@@ -13,8 +13,8 @@ global stress
 global strain
 global res
 
-global nx = 10;
-global ny = 10;
+global nx = 40;
+global ny = 40;
 global nelem = (nx-1)*(ny-1)
 global nnods = nx*ny;
 global size_tot
@@ -29,7 +29,7 @@ global nvoi = 3;
 
 init_vars();
 
-size_tot = (nx*ny + max(size(bc_y0)) + max(size(bc_x0))) * dim;
+size_tot = (nx*ny + max(size(bc_y0_per)) + max(size(bc_x0))) * dim;
 elem_type = zeros(nelem, 1);
 
 #elements

@@ -7,6 +7,8 @@ global bc_y0
 global bc_y1
 global bc_x0
 global bc_x1
+global bc_y0_per
+global bc_y1_per
 global xg
 global wg
 global b_mat
@@ -34,6 +36,8 @@ end
 
 bc_y0 = [1 : 1 : nx];
 bc_y1 = [(ny-1)*nx + 1 : 1 : nx*ny];
+bc_y0_per = [2 : 1 : nx-1];
+bc_y1_per = [(ny-1)*nx + 2 : 1 : nx*ny-1];
 bc_x0 = [nx + 1 : nx : (ny-2)*nx + 1];
 bc_x1 = [2*nx : nx : (ny-1)*nx];
 bc_nods = [bc_y0, bc_y1, bc_x0, bc_x1]';

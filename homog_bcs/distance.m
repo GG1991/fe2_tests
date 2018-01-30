@@ -5,7 +5,7 @@ global coordinates
 global lx
 global ly
 
-center = [lx / 2, ly / 2];
+center = [lx / 2-0.0, ly / 2+0.0];
 centroid = [0.0, 0.0];
 
 for i = 1 : size(elements, 2)
