@@ -27,9 +27,16 @@ global npe = 4;
 global dim = 2;
 global nvoi = 3;
 
+%method = "lagrange_mult";
+method = "penalty";
+
 init_vars();
 
-size_tot = (nx*ny + max(size(bc_y0_per)) + max(size(bc_x0))) * dim;
+if strcmp(method, "lagrange_mult")
+ size_tot = (nx*ny + max(size(bc_y0_per)) + max(size(bc_x0))) * dim;
+elseif strcmp(method, "penalty")
+ size_tot = nx*ny*dim;
+end
 elem_type = zeros(nelem, 1);
 
 #elements
@@ -49,13 +56,21 @@ for i = 1 : 3
 u = zeros(size_tot, 1);
 printf ("\033[31mstrain = %f %f %f\n\033[0m", strain_exp(:,i)');
 
-[jac, res] = ass_periodic (strain_exp(:,i), u);
+if strcmp(method, "lagrange_mult")
+  [jac, res] = ass_periodic_lm (strain_exp(:,i), u);
+elseif strcmp(method, "penalty")
+  [jac, res] = ass_periodic_pm (strain_exp(:,i), u);
+end
 printf ("\033[32m|res| = %f\n\033[0m", norm(res));
 
 du = -(jac\res);
 u = u + du;
 
-[jac, res] = ass_periodic (strain_exp(:,i), u);
+if strcmp(method, "lagrange_mult")
+  [jac, res] = ass_periodic_lm (strain_exp(:,i), u);
+elseif strcmp(method, "penalty")
+  [jac, res] = ass_periodic_pm (strain_exp(:,i), u);
+end
 printf ("\033[32m|res| = %f\n\033[0m", norm(res));
 
 [strain_ave, stress_ave] = average()

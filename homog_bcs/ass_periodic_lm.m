@@ -1,4 +1,5 @@
-function [jac, res] = ass_periodic (strain_mac, u_n)
+% Lagrange multiplier method
+function [jac, res] = ass_periodic_lm (strain_mac, u_n)
 
 global elements
 global coordinates
