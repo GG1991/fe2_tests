@@ -1,3 +1,6 @@
+
+% Penalty method for BCs (Linear problem)
+
 global elements
 global coordinates
 global elem_type
@@ -27,23 +30,11 @@ global npe = 4;
 global dim = 2;
 global nvoi = 3;
 
-%method = "lagrange_mult";
-method = "penalty";
-
 init_vars();
 
-if strcmp(method, "lagrange_mult")
- size_tot = (nx*ny + max(size(bc_y0_per)) + max(size(bc_x0))) * dim;
-elseif strcmp(method, "penalty")
- size_tot = nx*ny*dim;
-end
+size_tot = nx*ny*dim;
 elem_type = zeros(nelem, 1);
 
-#elements
-#coordinates
-#bc_nods
-
-du = zeros(size_tot, 1);
 strain = zeros((nx-1)*(ny-1), nvoi);
 stress = zeros((nx-1)*(ny-1), nvoi);
 
@@ -56,22 +47,11 @@ for i = 1 : 3
 u = zeros(size_tot, 1);
 printf ("\033[31mstrain = %f %f %f\n\033[0m", strain_exp(:,i)');
 
-if strcmp(method, "lagrange_mult")
-  [jac, res] = ass_periodic_lm (strain_exp(:,i), u);
-elseif strcmp(method, "penalty")
-  [jac, res] = ass_periodic_pm (strain_exp(:,i), u);
-end
-printf ("\033[32m|res| = %f\n\033[0m", norm(res));
 
-du = -(jac\res);
-u = u + du;
+[K, f] = ass_periodic_pm (strain_exp(:,i), u);
+u = K\f;
 
-if strcmp(method, "lagrange_mult")
-  [jac, res] = ass_periodic_lm (strain_exp(:,i), u);
-elseif strcmp(method, "penalty")
-  [jac, res] = ass_periodic_pm (strain_exp(:,i), u);
-end
-printf ("\033[32m|res| = %f\n\033[0m", norm(res));
+[K, f] = ass_periodic_pm (strain_exp(:,i), u);
 
 [strain_ave, stress_ave] = average()
 c_ave(:,i) = stress_ave' / strain_ave(i);
@@ -82,6 +62,7 @@ printf ("\n");
 c_ave
 
 %figure();
-%spy(jac); print -djpg spy.jpg 
+%spy(K); print -djpg spy.jpg 
 
+res = f;
 write_vtk("sol.vtk", u)
