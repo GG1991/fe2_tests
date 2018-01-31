@@ -1,5 +1,5 @@
 % Lagrange multiplier method
-function [jac, res] = ass_periodic_lm (strain_mac, u_n)
+function [jac, res] = ass_unifstress_lm (strain_mac, u_n)
 
 global elements
 global coordinates
@@ -22,6 +22,7 @@ global dim
 global nelem
 global size_tot
 
+area = lx*ly;
 
 jac = sparse(size_tot, size_tot);
 res = zeros(size_tot, 1);
@@ -50,49 +51,60 @@ X1Y0_nod = nx;
 X1Y1_nod = nx*ny;
 X0Y1_nod = (ny-1)*nx + 1;
 
-u_dif_y0 = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * [0.0, ly]';
-u_dif_x0 = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * [lx , 0.0]';
 u_X0Y0 = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * [0.0, 0.0]';
 u_X1Y0 = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * [lx , 0.0]';
 u_X1Y1 = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * [lx , ly ]';
 u_X0Y1 = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * [0.0, ly ]';
 
-res([1:2:max(size(bc_y0_per))*dim] + nx*ny*dim) = u_n([bc_y1_per*dim - 1]) - u_n([bc_y0_per*dim - 1]) - u_dif_y0(1); %x
-res([2:2:max(size(bc_y0_per))*dim] + nx*ny*dim) = u_n([bc_y1_per*dim - 0]) - u_n([bc_y0_per*dim - 0]) - u_dif_y0(2); %y
-res([1:2:max(size(bc_x0))*dim] + (nx*ny + max(size(bc_y0_per,2)) )*dim) = u_n([bc_x1*dim - 1]) - u_n([bc_x0*dim - 1]) - u_dif_x0(1); %x
-res([2:2:max(size(bc_x0))*dim] + (nx*ny + max(size(bc_y0_per,2)) )*dim) = u_n([bc_x1*dim - 0]) - u_n([bc_x0*dim - 0]) - u_dif_x0(2); %y
+ax = dx/area;
+ay = dy/area;
 
-% fb +- µ
-res(bc_y0_per*dim - 1) -= u_n([1:2:max(size(bc_y0_per))*dim] + nx*ny*dim); %x
-res(bc_y1_per*dim - 1) += u_n([1:2:max(size(bc_y0_per))*dim] + nx*ny*dim); %x
-res(bc_y0_per*dim - 0) -= u_n([2:2:max(size(bc_y0_per))*dim] + nx*ny*dim); %y
-res(bc_y1_per*dim - 0) += u_n([2:2:max(size(bc_y0_per))*dim] + nx*ny*dim); %y
+lam_1 = u_n(nx*ny*dim + 1);
+lam_2 = u_n(nx*ny*dim + 2);
+lam_3 = u_n(nx*ny*dim + 3);
 
-res(bc_x0*dim - 1) -= u_n([1:2:max(size(bc_x0))*dim] + (nx*ny + max(size(bc_y0_per)))*dim); %x
-res(bc_x1*dim - 1) += u_n([1:2:max(size(bc_x0))*dim] + (nx*ny + max(size(bc_y0_per)))*dim); %x
-res(bc_x0*dim - 0) -= u_n([2:2:max(size(bc_x0))*dim] + (nx*ny + max(size(bc_y0_per)))*dim); %y
-res(bc_x1*dim - 0) += u_n([2:2:max(size(bc_x0))*dim] + (nx*ny + max(size(bc_y0_per)))*dim); %y
+res(nx*ny*dim + 1) = sum(u_n(bc_y0_per*dim - 1))*ax + sum(u_n(bc_y1_per*dim - 1))*(-ax) - strain_mac(1);
+res(nx*ny*dim + 2) = sum(u_n(bc_x1*dim     - 0))*ay + sum(u_n(bc_x0*dim     - 0))*(-ay) - strain_mac(2);
+res(nx*ny*dim + 3) = + sum(u_n(bc_x0*dim   - 1))*(-ay/2) + sum(u_n(bc_x1*dim - 1))*ay/2 ...
+                     + sum(u_n(bc_y0_per*dim - 0))*ax/2  + sum(u_n(bc_y1_per*dim - 0))*(-ax/2) - strain_mac(3);
+
+res(bc_x0*dim - 1) -= -ay  *lam_2; %x
+res(bc_x0*dim - 0) -= -ay/2*lam_3; %y
+res(bc_x1*dim - 1) -= +ay  *lam_2; %x
+res(bc_x1*dim - 0) -= +ay/2*lam_3; %y
+
+res(bc_y0_per*dim - 1) -= +ax  *lam_1; %x
+res(bc_y0_per*dim - 0) -= +ax/2*lam_3; %y
+res(bc_y1_per*dim - 1) -= -ax  *lam_1; %x
+res(bc_y1_per*dim - 0) -= -ax/2*lam_3; %y
 
 res([X0Y0_nod*dim - 1, X0Y0_nod*dim + 0]) = u_n([X0Y0_nod*dim - 1, X0Y0_nod*dim + 0]) - u_X0Y0; % x & y
 res([X1Y0_nod*dim - 1, X1Y0_nod*dim + 0]) = u_n([X1Y0_nod*dim - 1, X1Y0_nod*dim + 0]) - u_X1Y0; % x & y
 res([X1Y1_nod*dim - 1, X1Y1_nod*dim + 0]) = u_n([X1Y1_nod*dim - 1, X1Y1_nod*dim + 0]) - u_X1Y1; % x & y
 res([X0Y1_nod*dim - 1, X0Y1_nod*dim + 0]) = u_n([X0Y1_nod*dim - 1, X0Y1_nod*dim + 0]) - u_X0Y1; % x & y
 
+jac(nx*ny*dim + 1, bc_y1_per(:)*dim - 1) = -ax;
+jac(nx*ny*dim + 1, bc_y0_per(:)*dim - 1) = +ax;
+jac(nx*ny*dim + 2, bc_x1(:)*dim - 0) = +ay;
+jac(nx*ny*dim + 2, bc_x0(:)*dim - 0) = -ay;
+jac(nx*ny*dim + 3, bc_y1_per(:)*dim - 0) = -ax/2;
+jac(nx*ny*dim + 3, bc_y0_per(:)*dim - 0) = +ax/2;
+jac(nx*ny*dim + 3, bc_x1(:)*dim - 1) = +ay/2;
+jac(nx*ny*dim + 3, bc_x0(:)*dim - 1) = -ay/2;
+
 for n = 1 : max(size(bc_y0_per))
-  for d = 0 : 1
-    jac(n*dim + nx*ny*dim - d, bc_y1_per(n)*dim - d) = +1.0;
-    jac(n*dim + nx*ny*dim - d, bc_y0_per(n)*dim - d) = -1.0;
-    jac(bc_y1_per(n)*dim - d, n*dim + nx*ny*dim - d) = +1.0;
-    jac(bc_y0_per(n)*dim - d, n*dim + nx*ny*dim - d) = -1.0;
-  end
+  jac(bc_y1_per(n)*dim - 1, nx*ny*dim + [1 2 3]) = [0   0  -ax/2];
+  jac(bc_y1_per(n)*dim - 0, nx*ny*dim + [1 2 3]) = [-ax 0  0    ];
+  jac(bc_y0_per(n)*dim - 1, nx*ny*dim + [1 2 3]) = [0   0  +ax/2];
+  jac(bc_y0_per(n)*dim - 0, nx*ny*dim + [1 2 3]) = [+ax 0  0    ];
 end
 
 for n = 1 : max(size(bc_x0))
   for d = 0 : 1
-    jac(n*dim + ( nx*ny + max(size(bc_y0_per)) )*dim - d, bc_x1(n)*dim - d) = +1.0;
-    jac(n*dim + ( nx*ny + max(size(bc_y0_per)) )*dim - d, bc_x0(n)*dim - d) = -1.0;
-    jac(bc_x1(n)*dim - d, n*dim + (nx*ny + max(size(bc_y0_per)))*dim - d) = +1.0;
-    jac(bc_x0(n)*dim - d, n*dim + (nx*ny + max(size(bc_y0_per)))*dim - d) = -1.0;
+  jac(bc_x1(n)*dim - 1, nx*ny*dim + [1 2 3]) = [0  +ay  0    ];
+  jac(bc_x1(n)*dim - 0, nx*ny*dim + [1 2 3]) = [0  0    +ay/2];
+  jac(bc_x0(n)*dim - 1, nx*ny*dim + [1 2 3]) = [0  -ay  0    ];
+  jac(bc_x0(n)*dim - 0, nx*ny*dim + [1 2 3]) = [0  0    -ay/2];
   end
 end
 

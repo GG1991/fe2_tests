@@ -16,8 +16,8 @@ global stress
 global strain
 global res
 
-global nx = 40;
-global ny = 40;
+global nx = 10;
+global ny = 10;
 global nelem = (nx-1)*(ny-1)
 global nnods = nx*ny;
 global size_tot
@@ -32,7 +32,7 @@ global nvoi = 3;
 
 init_vars();
 
-size_tot = (nx*ny + nvoi) * dim;
+size_tot = nx*ny*dim + nvoi;
 elem_type = zeros(nelem, 1);
 
 du = zeros(size_tot, 1);
