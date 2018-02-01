@@ -52,7 +52,7 @@ for i = 1 : 3
 u = zeros(size_tot, 1);
 printf ("\033[31mstrain = %f %f %f\n\033[0m", strain_exp(:,i)');
 
-for nr = 1 : 3
+for nr = 1 : 2
 
   [jac, res] = ass_unifstress_lm (strain_exp(:,i), u);
   printf ("\033[32m|res| = %f\n\033[0m", norm(res));
