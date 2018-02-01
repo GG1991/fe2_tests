@@ -16,8 +16,8 @@ global stress
 global strain
 global res
 
-global nx = 10;
-global ny = 10;
+global nx = 3;
+global ny = 3;
 global nelem = (nx-1)*(ny-1)
 global nnods = nx*ny;
 global size_tot
@@ -29,6 +29,10 @@ global dy = ly / (ny - 1);
 global npe = 4;
 global dim = 2;
 global nvoi = 3;
+
+global lam_1
+global lam_2
+global lam_3
 
 init_vars();
 
@@ -48,7 +52,7 @@ for i = 1 : 3
 u = zeros(size_tot, 1);
 printf ("\033[31mstrain = %f %f %f\n\033[0m", strain_exp(:,i)');
 
-for nr = 1 : 2
+for nr = 1 : 3
 
   [jac, res] = ass_unifstress_lm (strain_exp(:,i), u);
   printf ("\033[32m|res| = %f\n\033[0m", norm(res));
@@ -70,7 +74,11 @@ end
 printf ("\n");
 c_ave
 
-%figure();
-%spy(jac); print -djpg spy.jpg 
+lam_1
+lam_2
+lam_3
+
+figure();
+spy(jac); print -djpg spy.jpg 
 
 write_vtk("sol.vtk", u)
