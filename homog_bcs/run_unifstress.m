@@ -16,8 +16,8 @@ global stress
 global strain
 global res
 
-global nx = 3;
-global ny = 3;
+global nx = 10;
+global ny = 10;
 global nelem = (nx-1)*(ny-1)
 global nnods = nx*ny;
 global size_tot
@@ -62,6 +62,7 @@ for nr = 1 : 3
   end
   
   du = -(jac\res);
+  %printf ("\033[32m|Ax-b| = %f\n\033[0m", norm(jac*du + res));
   u = u + du;
 
 end
@@ -78,7 +79,7 @@ lam_1
 lam_2
 lam_3
 
-figure();
-spy(jac); print -djpg spy.jpg 
+%figure();
+%spy(jac); print -djpg spy.jpg 
 
 write_vtk("sol.vtk", u)
