@@ -63,10 +63,11 @@ lam_1 = u_n(nx*ny*dim + 1);
 lam_2 = u_n(nx*ny*dim + 2);
 lam_3 = u_n(nx*ny*dim + 3);
 
-res(nx*ny*dim + 1) = sum(u_n(bc_y0_per*dim - 1))*ax + sum(u_n(bc_y1_per*dim - 1))*(-ax) - strain_mac(1);
-res(nx*ny*dim + 2) = sum(u_n(bc_x1*dim     - 0))*ay + sum(u_n(bc_x0*dim     - 0))*(-ay) - strain_mac(2);
-res(nx*ny*dim + 3) = + sum(u_n(bc_x0*dim   - 1))*(-ay/2) + sum(u_n(bc_x1*dim - 1))*ay/2 ...
-                     + sum(u_n(bc_y0_per*dim - 0))*ax/2  + sum(u_n(bc_y1_per*dim - 0))*(-ax/2) - strain_mac(3);
+res(nx*ny*dim + 1)  = + sum(u_n(bc_y1_per*dim - 1))*ay   - sum(u_n(bc_y0_per*dim - 1))*ay   - strain_mac(1); % ux x nx - exx
+res(nx*ny*dim + 2)  = + sum(u_n(bc_x1    *dim - 0))*ax   - sum(u_n(bc_x0    *dim - 0))*ax   - strain_mac(2); % uy x ny - eyy
+res(nx*ny*dim + 3)  = + sum(u_n(bc_y1_per*dim - 0))*ay/2 - sum(u_n(bc_y0_per*dim - 0))*ay/2;
+res(nx*ny*dim + 3) += + sum(u_n(bc_x1    *dim - 1))*ax/2 - sum(u_n(bc_x0    *dim - 1))*ax/2;
+res(nx*ny*dim + 3) += - strain_mac(3); % 1/2 ux x ny + 1/2 uy x nx
 
 res(bc_x0*dim - 1) -= -ay  *lam_2; %x
 res(bc_x0*dim - 0) -= -ay/2*lam_3; %y
