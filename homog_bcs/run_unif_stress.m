@@ -16,8 +16,8 @@ global stress
 global strain
 global res
 
-global nx = 10;
-global ny = 10;
+global nx = 50;
+global ny = 50;
 global nelem = (nx-1)*(ny-1)
 global nnods = nx*ny;
 global size_tot
@@ -81,5 +81,8 @@ lam_3
 
 %figure();
 %spy(jac); print -djpg spy.jpg 
+
+%res = jac(:, nx*ny*dim + [1 2 3]) * [lam_1 lam_2 lam_3]'; % to plot forces do to stress in surface
+
 
 write_vtk("sol.vtk", u)

@@ -1,5 +1,7 @@
 *.swp
-*.jpg
 *.pdf
 *.vtk
 *octave*
+
+*.jpg
+*.png

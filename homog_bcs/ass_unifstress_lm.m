@@ -73,7 +73,7 @@ res(nx*ny*dim + 1)  = + sum(u_n(bc_x1*dim     - 1))*ay   - sum(u_n(bc_x0*dim    
 res(nx*ny*dim + 2)  = + sum(u_n(bc_y1_per*dim - 0))*ax   - sum(u_n(bc_y0_per*dim - 0))*ax   - strain_mac(2); % uy x ny - eyy
 res(nx*ny*dim + 3)  = + sum(u_n(bc_y1_per*dim - 1))*ax/2 - sum(u_n(bc_y0_per*dim - 1))*ax/2;                 % 1/2 ux x ny
 res(nx*ny*dim + 3) += + sum(u_n(bc_x1*dim     - 0))*ay/2 - sum(u_n(bc_x0*dim     - 0))*ay/2;                 % 1/2 uy x nx
-res(nx*ny*dim + 3) += - strain_mac(3); % - exy
+res(nx*ny*dim + 3) += - strain_mac(3)/2; % - exy
 
 % corners
 res(nx*ny*dim + 1) += + u_n(X1Y0_nod*dim - 1)*ay/2 + u_n(X1Y1_nod*dim - 1)*ay/2 - u_n(X0Y1_nod*dim -1)*ay/2; % X0 X1 faces
@@ -90,6 +90,12 @@ res(bc_x1*dim     - 1) -= +ay  *lam_1;
 res(bc_x1*dim     - 0) -= +ay/2*lam_3;
 res(bc_x0*dim     - 1) -= -ay  *lam_1;
 res(bc_x0*dim     - 0) -= -ay/2*lam_3;
+
+% corners
+res([X1Y0_nod X1Y1_nod X0Y1_nod]*dim - 1) += -[+ay/2 +ay/2 -ay/2]'*lam_1; % X0 X1 faces
+res([X1Y0_nod X1Y1_nod X0Y1_nod]*dim - 0) += -[-ax/2 +ax/2 +ax/2]'*lam_2; % Y0 Y1 faces
+res([X1Y0_nod X1Y1_nod X0Y1_nod]*dim - 1) += -[-ax/4 +ax/4 +ax/4]'*lam_3; % Y0 Y1 faces
+res([X1Y0_nod X1Y1_nod X0Y1_nod]*dim - 0) += -[+ay/4 +ay/4 -ay/4]'*lam_3; % X0 X1 faces
 
 res([X0Y0_nod*dim - 1, X0Y0_nod*dim + 0]) = u_n([X0Y0_nod*dim - 1, X0Y0_nod*dim + 0]) - u_X0Y0; % x & y
 
@@ -119,6 +125,15 @@ for n = 1 : max(size(bc_y0_per))
   jac(bc_x0(n)*dim - 1    , nx*ny*dim + [1 2 3]) = -[-ay 0    0    ];
   jac(bc_x0(n)*dim - 0    , nx*ny*dim + [1 2 3]) = -[0   0    -ay/2];
 end
+
+% corners
+jac(X1Y0_nod*dim - 1, nx*ny*dim + [1 2 3]) += -[+ay/2   0.0   -ax/4]; % X1 face x dir
+jac(X1Y0_nod*dim - 0, nx*ny*dim + [1 2 3]) += -[ 0.0   -ax/2  +ay/4]; % X1 face y dir
+jac(X1Y1_nod*dim - 1, nx*ny*dim + [1 2 3]) += -[+ay/2   0.0   +ax/4]; % X1 face x dir
+jac(X1Y1_nod*dim - 0, nx*ny*dim + [1 2 3]) += -[ 0.0   +ax/2  +ay/4]; % X1 face y dir
+
+jac(X0Y1_nod*dim - 1, nx*ny*dim + [1 2 3]) += -[-ay/2   0.0   +ax/4]; % X0 face x dir
+jac(X0Y1_nod*dim - 0, nx*ny*dim + [1 2 3]) += -[ 0.0   +ax/2  -ay/4]; % X0 face y dir
 
 jac([X0Y0_nod*dim - 1; X0Y0_nod*dim - 0], :) = 0.0;
 for d = 0 : 1
