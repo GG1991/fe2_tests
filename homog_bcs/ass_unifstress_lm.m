@@ -75,6 +75,12 @@ res(nx*ny*dim + 3)  = + sum(u_n(bc_y1_per*dim - 1))*ax/2 - sum(u_n(bc_y0_per*dim
 res(nx*ny*dim + 3) += + sum(u_n(bc_x1*dim     - 0))*ay/2 - sum(u_n(bc_x0*dim     - 0))*ay/2;                 % 1/2 uy x nx
 res(nx*ny*dim + 3) += - strain_mac(3); % - exy
 
+% corners
+res(nx*ny*dim + 1) += + u_n(X1Y0_nod*dim - 1)*ay/2 + u_n(X1Y1_nod*dim - 1)*ay/2 - u_n(X0Y1_nod*dim -1)*ay/2; % X0 X1 faces
+res(nx*ny*dim + 2) += - u_n(X1Y0_nod*dim - 0)*ax/2 + u_n(X1Y1_nod*dim - 0)*ax/2 + u_n(X0Y1_nod*dim -0)*ax/2; % Y0 Y1 faces
+res(nx*ny*dim + 3) += - u_n(X1Y0_nod*dim - 1)*ax/4 + u_n(X1Y1_nod*dim - 1)*ax/4 + u_n(X0Y1_nod*dim -1)*ax/4; % Y0 Y1 faces
+res(nx*ny*dim + 3) += + u_n(X1Y0_nod*dim - 0)*ay/4 + u_n(X1Y1_nod*dim - 0)*ay/4 - u_n(X0Y1_nod*dim -0)*ay/4; % X0 X1 faces
+
 res(bc_y1_per*dim - 1) -= +ax/2*lam_3;
 res(bc_y1_per*dim - 0) -= +ax  *lam_2;
 res(bc_y0_per*dim - 1) -= -ax/2*lam_3;
@@ -95,6 +101,12 @@ jac(nx*ny*dim + 3, bc_x1*dim     - 0) = +ay/2;
 jac(nx*ny*dim + 3, bc_x0*dim     - 0) = -ay/2;
 jac(nx*ny*dim + 3, bc_y1_per*dim - 1) = +ax/2;
 jac(nx*ny*dim + 3, bc_y0_per*dim - 1) = -ax/2;
+
+% corners
+jac(nx*ny*dim + 1,[X1Y0_nod X1Y1_nod X0Y1_nod]*dim - 1) += [+ay/2 +ay/2 -ay/2]; % X0 X1 faces
+jac(nx*ny*dim + 2,[X1Y0_nod X1Y1_nod X0Y1_nod]*dim - 0) += [-ax/2 +ax/2 +ax/2]; % Y0 Y1 faces
+jac(nx*ny*dim + 3,[X1Y0_nod X1Y1_nod X0Y1_nod]*dim - 1) += [-ax/4 +ax/4 +ax/4]; % Y0 Y1 faces
+jac(nx*ny*dim + 3,[X1Y0_nod X1Y1_nod X0Y1_nod]*dim - 0) += [+ay/4 +ay/4 -ay/4]; % X0 X1 faces
 
 for n = 1 : max(size(bc_y0_per))
   jac(bc_y1_per(n)*dim - 1, nx*ny*dim + [1 2 3]) = -[0   0    +ax/2];
