@@ -22,7 +22,6 @@ global dim
 global nelem
 global size_tot
 
-
 jac = sparse(size_tot, size_tot);
 res = zeros(size_tot, 1);
 u_e = zeros(npe*dim, 1);
@@ -34,11 +33,7 @@ for e = 1 : nelem
     u_e([2:2:npe*dim]) = u_n([elements(e, :)*dim + 0]); %set y vals
 
     [jac_e, res_e] = elemental (e, u_e);
-    for n = 1 : npe 
-      for d = 0 : 1
-        ind(n*dim - d) = elements(e,n)*dim - d;
-      end
-    end
+    ind = [elements(e,:)*dim - 1; elements(e,:)*dim - 0](:);
 
     jac(ind, ind) += jac_e;
     res(ind) += res_e;

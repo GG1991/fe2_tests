@@ -56,16 +56,13 @@ for nr = 1 : 2
 
   [jac, res] = ass_periodic_lm (strain_exp(:,i), u);
   printf ("\033[32m|res| = %f\n\033[0m", norm(res));
-
-  if (norm(res) < 1.0e-3)
-    break
-  end
+  
+  if (norm(res) < 1.0e-3); break; end
   
   du = -(jac\res);
   u = u + du;
 
 end
-
 
 [strain_ave, stress_ave] = average()
 c_ave(:,i) = stress_ave' / strain_ave(i);
