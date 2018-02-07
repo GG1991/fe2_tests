@@ -46,4 +46,7 @@ for gp = 1 : npe
 
 end
 
+strain(e,:) /= sum(wg);
+stress(e,:) /= sum(wg);
+
 endfunction

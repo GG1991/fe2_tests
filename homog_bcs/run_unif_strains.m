@@ -53,7 +53,7 @@ u = u + du;
 [jac, res] = ass_unifstrains (strain_exp(:,i), u);
 printf ("\033[32m|res| = %f\n\033[0m", norm(res));
 
-[strain_ave, stress_ave] = average();
+[strain_ave, stress_ave] = average()
 c_ave(:,i) = stress_ave' / strain_ave(i);
 
 end
