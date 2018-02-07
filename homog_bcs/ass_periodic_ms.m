@@ -1,4 +1,6 @@
-% Lagrange multiplier method
+
+% Unknowns elimination method (Master-slave)
+
 function [jac, res] = ass_periodic_ms (strain_mac, u_n)
 
 global elements
@@ -45,25 +47,12 @@ X1Y0_nod = nx;
 X1Y1_nod = nx*ny;
 X0Y1_nod = (ny-1)*nx + 1;
 
-u_dif_y0 = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * [0.0, ly]';
-u_dif_x0 = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * [lx , 0.0]';
 u_X0Y0 = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * [0.0, 0.0]';
 u_X1Y0 = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * [lx , 0.0]';
 u_X1Y1 = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * [lx , ly ]';
 u_X0Y1 = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * [0.0, ly ]';
 
-% f+ + f- = 0	
-res(bc_y1_per*dim - 1) += res(bc_y0_per*dim - 1) ;
-res(bc_y1_per*dim - 0) += res(bc_y0_per*dim - 0) ;
-res(bc_x1*dim - 1)     += res(bc_x0*dim - 1)     ;
-res(bc_x1*dim - 0)     += res(bc_x0*dim - 0)     ;
-
-% u+ - u- - c = 0
-res(bc_y0_per*dim - 1) = u_n(bc_y1_per*dim - 1) - u_n(bc_y0_per*dim - 1) - u_dif_y0(1); %x
-res(bc_y0_per*dim - 0) = u_n(bc_y1_per*dim - 0) - u_n(bc_y0_per*dim - 0) - u_dif_y0(2); %y
-res(bc_x0*dim - 1)     = u_n(bc_x1*dim - 1)     - u_n(bc_x0*dim - 1)     - u_dif_x0(1); %x
-res(bc_x0*dim - 0)     = u_n(bc_x1*dim - 0)     - u_n(bc_x0*dim - 0)     - u_dif_x0(2); %y
-
+%corners
 res([X0Y0_nod*dim - 1, X0Y0_nod*dim + 0]) = u_n([X0Y0_nod*dim - 1, X0Y0_nod*dim + 0]) - u_X0Y0; % x & y
 res([X1Y0_nod*dim - 1, X1Y0_nod*dim + 0]) = u_n([X1Y0_nod*dim - 1, X1Y0_nod*dim + 0]) - u_X1Y0; % x & y
 res([X1Y1_nod*dim - 1, X1Y1_nod*dim + 0]) = u_n([X1Y1_nod*dim - 1, X1Y1_nod*dim + 0]) - u_X1Y1; % x & y
