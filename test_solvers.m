@@ -1,4 +1,4 @@
-n = 6;
+n = 40;
 A = sparse(n,n);
 A_e = [1 -1; -1 1]; 
 
@@ -11,12 +11,14 @@ A(1,1) = 1;
 A(n,:) = 0;
 A(:,n) = 0;
 A(n,n) = 1;
-full(A)
+%full(A)
 b = ones(n,1);
 b(1) = 0;
 b(n) = 0;
 
-x = A \ b
+%x = A \ b
 
 x1 = zeros(n,1);
-x1 = jacobi(A,b,x1)
+%x1 = jacobi(A,b,x1)
+x1 = cg(A,b,x1);
+save -ascii sol.dat x1
