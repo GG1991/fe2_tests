@@ -18,7 +18,23 @@ b(n) = 0;
 
 %x = A \ b
 
-x1 = zeros(n,1);
-%x1 = jacobi(A,b,x1)
-x1 = cg(A,b,x1);
-save -ascii sol.dat x1
+x = zeros(n,1);
+tic();
+[x, tol, its] = jacobi(A,b,x);
+time = toc();
+printf("\033[31m jacobi\n", tol);
+printf("\033[32m tol :%e\n", tol);
+printf("\033[32m its :%d\n", its);
+printf("\033[32m time:%f\n", time);
+save -ascii sol_jacobi.dat x
+printf("\n");
+
+x = zeros(n,1);
+tic();
+[x, tol, its] = cg(A,b,x);
+time = toc();
+printf("\033[31m cg\n", tol);
+printf("\033[32m tol :%e\n", tol);
+printf("\033[32m its :%d\n", its);
+printf("\033[32m time:%f\n", time);
+save -ascii sol_cg.dat x
