@@ -9,8 +9,8 @@ global stress
 global strain
 global res
 
-global nx = 20;
-global ny = 20;
+global nx = 50;
+global ny = 50;
 global nelem = (nx-1)*(ny-1)
 global nnods = nx*ny;
 global lx = 3;
@@ -35,6 +35,9 @@ strain_exp = [0.005 0 0; 0 0.005 0; 0 0 0.005];
 
 c_ave = zeros(3,3);
 
+tol = 0;
+its = 0;
+
 for i = 1 : 3
 
 u = zeros(nnods*dim, 1);
@@ -51,9 +54,15 @@ for nr = 1 : 2
   printf ("\033[32m|res| = %f\n\033[0m", norm(res));
   if (norm(res) < 1.0e-3); break; end
 
-  du = -(jac\res);
+  tic();
+  %du = -(jac\res);
+  [du, tol, its] = cg(jac, -res, du);
+  time = toc()*1000;
   u = u + du;
 end
+printf("tol  :%e\n",tol);
+printf("its  :%d\n",its);
+printf("time :%f ms\n",time);
 
 [strain_ave, stress_ave] = average()
 c_ave(:,i) = stress_ave' / strain_ave(i);

@@ -1,9 +1,9 @@
-function x_1 = cg(A, b, x_0)
+function [x_1, tol, its] = cg(A, b, x_0)
 
 K_inv = diag(1./diag(A));
 
 tol_min = 1.0e-5;
-its_max = 10;
+its_max = 100;
 
 its = 1;
 tol = 1.0;
@@ -29,9 +29,7 @@ while (its < its_max && tol > tol_min)
 
   its += 1;
   tol = norm(A*x_1 - b);
-  printf("%e\n",tol);
 
 endwhile
-printf("%d\n",its);
 
 endfunction
