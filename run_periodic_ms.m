@@ -85,10 +85,10 @@ for nr = 1 : 3
   printf ("\033[32m|res| = %f\n\033[0m", norm([ra ; rm+rp]));
   if (norm([ra ; rm+rp]) < 1.0e-3); break; end
 
-  du  = - [Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)] \ [ra ; rm+rp];
-% du = zeros(size(Kaa,2) + size(Kap,2) ,1);
-% [du, tol, its]  = cg(-[Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)] , [ra ; rm+rp], du);
-% tol, its
+  %du  = - [Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)] \ [ra ; rm+rp];
+  du = zeros(size(Kaa,2) + size(Kap,2) ,1);
+  [du, tol, its]  = cg(-[Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)] , [ra ; rm+rp], du);
+  tol, its
   dua = du([1:size(ix_a,2)]);
   dum = du([size(ix_a,2) + 1 : size(du,1)]);
   dup = dum;
@@ -107,7 +107,7 @@ end
 printf ("\n");
 c_ave
 
-figure();
+%figure();
 %spy(jac); print -djpg spy.jpg 
 %spy([Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)]); print -djpg spy.jpg 
 issymmetric(full([Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)]),1.0e-8)
