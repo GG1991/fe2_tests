@@ -24,6 +24,11 @@ global ly
 global dx
 global dy
 
+global X0Y0_nod
+global X1Y0_nod
+global X1Y1_nod
+global X0Y1_nod
+
 elements = zeros((nx-1)*(ny-1), npe);
 for i = 1 : (ny-1)
   for j = 1 : (nx-1)
@@ -33,6 +38,11 @@ for i = 1 : (ny-1)
     elements((i-1)*(nx-1) + j, 4) = j    + i*nx;
   end
 end
+
+X0Y0_nod = 1;
+X1Y0_nod = nx;
+X1Y1_nod = nx*ny;
+X0Y1_nod = (ny-1)*nx + 1;
 
 bc_y0 = [1 : 1 : nx];
 bc_y1 = [(ny-1)*nx + 1 : 1 : nx*ny];
