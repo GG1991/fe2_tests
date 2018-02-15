@@ -20,13 +20,11 @@ global ly
 global dx
 global dy
 
-global X0Y0_nod
-global X1Y0_nod
-global X1Y1_nod
-global X0Y1_nod
+global elem_type = zeros(nelem, 1);
+global strain = zeros((nx-1)*(ny-1), nvoi);
+global stress = zeros((nx-1)*(ny-1), nvoi);
 
-global elements
-elements = zeros((nx-1)*(ny-1), npe);
+global elements = zeros((nx-1)*(ny-1), npe);
 for i = 1 : (ny-1)
   for j = 1 : (nx-1)
     elements((i-1)*(nx-1) + j, 1) = j    + (i-1)*nx;
@@ -35,6 +33,11 @@ for i = 1 : (ny-1)
     elements((i-1)*(nx-1) + j, 4) = j    + i*nx;
   end
 end
+
+global X0Y0_nod
+global X1Y0_nod
+global X1Y1_nod
+global X0Y1_nod
 
 X0Y0_nod = 1;
 X1Y0_nod = nx;
@@ -47,8 +50,7 @@ bc_x0 = [nx + 1 : nx : (ny-2)*nx + 1];
 bc_x1 = [2*nx : nx : (ny-1)*nx];
 bc_nods = [bc_y0, bc_y1, bc_x0, bc_x1]';
 
-global coordinates
-coordinates = zeros(nx*ny, dim);
+global coordinates = zeros(nx*ny, dim);
 for i = 1 : ny
   for j = 1 : nx
     coordinates((i - 1)*nx + j, 1) = (j - 1)*dx;

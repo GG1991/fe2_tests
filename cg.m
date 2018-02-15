@@ -1,15 +1,12 @@
-function [x_1, tol, its] = cg(A, b, x_0)
+function [x_1, err, its] = cg(A, b, x_0, min_tol, max_its)
 
 K_inv = diag(1./diag(A));
 
-tol_min = 1.0e-5;
-its_max = 100;
-
 its = 1;
-tol = 1.0;
+err = 1.0;
 
 r_0 = A*x_0 - b;
-while (its < its_max && tol > tol_min)
+while (its < max_its && err > min_tol)
 
   rho_1 = r_0'*K_inv*r_0;
   if (its == 1)
@@ -28,7 +25,7 @@ while (its < its_max && tol > tol_min)
   rho_0 = rho_1;
 
   its += 1;
-  tol = norm(A*x_1 - b);
+  err = norm(A*x_1 - b);
 
 endwhile
 

@@ -16,8 +16,8 @@ global stress
 global strain
 global res
 
-global nx = 3;
-global ny = 3;
+global nx = 50;
+global ny = 50;
 global nn = nx*ny;
 global nelem = (nx-1)*(ny-1)
 global nnods = nx*ny;
@@ -39,10 +39,6 @@ global size_tot = nx*ny*dim;
 
 init_vars();
 
-elem_type = zeros(nelem, 1);
-strain = zeros((nx-1)*(ny-1), nvoi);
-stress = zeros((nx-1)*(ny-1), nvoi);
-u = zeros(size_tot, 1);
 
 strain_exp = [0.005 0 0; 0 0.005 0; 0 0 0.005]';
 
@@ -63,11 +59,14 @@ u_X0Y1 = [strain_exp(1,i) strain_exp(3,i)/2 ; strain_exp(3,i)/2 strain_exp(2,i)]
 u_dif_y0 = [strain_exp(1,i) strain_exp(3,i)/2 ; strain_exp(3,i)/2 strain_exp(2,i)] * [0.0, ly]';
 u_dif_x0 = [strain_exp(1,i) strain_exp(3,i)/2 ; strain_exp(3,i)/2 strain_exp(2,i)] * [lx , 0.0]';
 
+u = zeros(size_tot, 1);
+% u+ = u- + c
 u(bc_y1*dim - 1) = u(bc_y0*dim - 1) + u_dif_y0(1);
 u(bc_y1*dim - 0) = u(bc_y0*dim - 0) + u_dif_y0(2);
 u(bc_x1*dim - 1) = u(bc_x0*dim - 1) + u_dif_x0(1);
 u(bc_x1*dim - 0) = u(bc_x0*dim - 0) + u_dif_x0(2);
 
+% u_cor = eps * x
 u([X0Y0_nod*dim - 1, X0Y0_nod*dim + 0]) = u_X0Y0; % x & y
 u([X1Y0_nod*dim - 1, X1Y0_nod*dim + 0]) = u_X1Y0; % x & y
 u([X1Y1_nod*dim - 1, X1Y1_nod*dim + 0]) = u_X1Y1; % x & y
@@ -83,13 +82,19 @@ for nr = 1 : 3
   Kpa = jac(ix_p, ix_a); Kpp = jac(ix_p, ix_p); Kpm = jac(ix_p, ix_m); rp = res(ix_p); 
   Kma = jac(ix_m, ix_a); Kmp = jac(ix_m, ix_p); Kmm = jac(ix_m, ix_m); rm = res(ix_m); 
 
-  printf ("\033[32m|res| = %f\n\033[0m", norm([ra ; rm+rp]));
-  if (norm([ra ; rm+rp]) < 1.0e-3); break; end
+  printf ("\033[32m|res| = %f\033[0m", norm([ra ; rm+rp]));
+  if (norm([ra ; rm+rp]) < 1.0e-3)
+    printf ("\n\033[0m");
+    break 
+  endif
 
-  du  = - [Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)] \ [ra ; rm+rp];
-  %du = zeros(size(Kaa,2) + size(Kap,2) ,1);
-  %[du, tol, its]  = cg(-[Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)] , [ra ; rm+rp], du);
-  %tol, its
+  %du  = - [Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)] \ [ra ; rm+rp];
+  du = zeros(size(Kaa,2) + size(Kap,2) ,1);
+  min_tol = 1.0e-7;
+  max_its = 500;
+  [du, tol, its]  = cg(-[Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)] , [ra ; rm+rp], du, min_tol, max_its);
+  printf ("\033[33m cg_tol = %f cg_its = %d\n\033[0m", tol, its);
+  
   dua = du([1:size(ix_a,2)]);
   dum = du([size(ix_a,2) + 1 : size(du,1)]);
   dup = dum;
