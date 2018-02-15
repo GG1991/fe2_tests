@@ -1,14 +1,10 @@
 function init_vars()
 
-global elements
-global coordinates
 global bc_nods
 global bc_y0
 global bc_y1
 global bc_x0
 global bc_x1
-global bc_y0_per
-global bc_y1_per
 global xg
 global wg
 global b_mat
@@ -29,6 +25,7 @@ global X1Y0_nod
 global X1Y1_nod
 global X0Y1_nod
 
+global elements
 elements = zeros((nx-1)*(ny-1), npe);
 for i = 1 : (ny-1)
   for j = 1 : (nx-1)
@@ -44,14 +41,13 @@ X1Y0_nod = nx;
 X1Y1_nod = nx*ny;
 X0Y1_nod = (ny-1)*nx + 1;
 
-bc_y0 = [1 : 1 : nx];
-bc_y1 = [(ny-1)*nx + 1 : 1 : nx*ny];
-bc_y0_per = [2 : 1 : nx-1];
-bc_y1_per = [(ny-1)*nx + 2 : 1 : nx*ny-1];
+bc_y0 = [2 : 1 : nx-1];
+bc_y1 = [(ny-1)*nx + 2 : 1 : nx*ny-1];
 bc_x0 = [nx + 1 : nx : (ny-2)*nx + 1];
 bc_x1 = [2*nx : nx : (ny-1)*nx];
 bc_nods = [bc_y0, bc_y1, bc_x0, bc_x1]';
 
+global coordinates
 coordinates = zeros(nx*ny, dim);
 for i = 1 : ny
   for j = 1 : nx
