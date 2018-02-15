@@ -19,6 +19,13 @@ global lx
 global ly
 global dx
 global dy
+global nn
+global nelem
+
+nn = nx*ny;
+nelem = (nx-1)*(ny-1);
+dx = lx/(nx-1);
+dy = ly/(ny-1);
 
 global elem_type = zeros(nelem, 1);
 global strain = zeros((nx-1)*(ny-1), nvoi);

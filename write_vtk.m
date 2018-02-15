@@ -3,7 +3,7 @@ function write_vtk(file_name, u_vec)
 global elements
 global coordinates
 global elem_type
-global nnods
+global nn
 global nelem
 global strain
 global stress
@@ -16,8 +16,8 @@ fprintf(fm, 'fe2_tests\n');
 fprintf(fm, 'ASCII\n');
 
 fprintf(fm,'DATASET UNSTRUCTURED_GRID\n');
-fprintf(fm,'POINTS %d FLOAT\n', nnods);
-for n = 1 : nnods
+fprintf(fm,'POINTS %d FLOAT\n', nn);
+for n = 1 : nn
    fprintf(fm,'%f %f 0.0\n',coordinates(n,:));
 end
 fprintf(fm,'CELLS %d %d\n', nelem, 5*nelem);
@@ -29,15 +29,15 @@ for e = 1 : nelem
    fprintf(fm,'9\n');
 end
 
-fprintf(fm, 'POINT_DATA %d\n', nnods);
+fprintf(fm, 'POINT_DATA %d\n', nn);
 fprintf(fm, 'VECTORS disp FLOAT\n');
 %fprintf(fm, 'LOOKUP_TABLE default\n');
-for n = 1 : nnods
+for n = 1 : nn
    fprintf(fm,'%f %f 0.0\n',u_vec([n*dim - 1, n*dim + 0]));
 end
 fprintf(fm, 'VECTORS residue FLOAT\n');
 %fprintf(fm, 'LOOKUP_TABLE default\n');
-for n = 1 : nnods
+for n = 1 : nn
    fprintf(fm,'%f %f 0.0\n',res([n*dim - 1, n*dim + 0]));
 end
 

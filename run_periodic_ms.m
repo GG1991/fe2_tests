@@ -1,4 +1,3 @@
-
 % Unknowns elimination method
 
 global elements
@@ -18,13 +17,12 @@ global res
 
 global nx = 50;
 global ny = 50;
-global nn = nx*ny;
-global nelem = (nx-1)*(ny-1)
-global nnods = nx*ny;
 global lx = 3;
 global ly = 3;
-global dx = lx/(nx-1);
-global dy = ly/(ny-1);
+global nn
+global nelem
+global dx
+global dy
 
 global npe = 4;
 global dim = 2;
@@ -44,7 +42,7 @@ strain_exp = [0.005 0 0; 0 0.005 0; 0 0 0.005]';
 
 ix_p = [bc_x1*dim-1, bc_x1*dim-0, bc_y1*dim-1, bc_y1*dim-0]; % + indeces
 ix_m = [bc_x0*dim-1, bc_x0*dim-0, bc_y0*dim-1, bc_y0*dim-0]; % + indeces
-ix_a = setdiff([1:nx*ny*dim],[ix_p, ix_m]); % interior indeces
+ix_a = setdiff([1:nn*dim],[ix_p, ix_m]); % interior indeces
 
 c_ave = zeros(3,3);
 
@@ -91,9 +89,13 @@ for nr = 1 : 3
   %du  = - [Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)] \ [ra ; rm+rp];
   du = zeros(size(Kaa,2) + size(Kap,2) ,1);
   min_tol = 1.0e-7;
-  max_its = 500;
+  max_its = 1000;
+  tic()
+  tol = 1;
+  its = 1;
   [du, tol, its]  = cg(-[Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)] , [ra ; rm+rp], du, min_tol, max_its);
-  printf ("\033[33m cg_tol = %f cg_its = %d\n\033[0m", tol, its);
+  time_sol = toc();
+  printf ("\033[33m cg_tol = %f cg_its = %d cg_time = %f\n\033[0m", tol, its, time_sol);
   
   dua = du([1:size(ix_a,2)]);
   dum = du([size(ix_a,2) + 1 : size(du,1)]);
