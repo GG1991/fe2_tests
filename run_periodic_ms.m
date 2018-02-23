@@ -119,11 +119,11 @@ c_ave
 %figure();
 %spy(jac); print -djpg spy.jpg 
 %spy([Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)]); print -djpg spy.jpg 
-if ( issymmetric(full([Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)]),1.0e-8) )
-  printf ("\033[32mjac is symmetric\n");
-else
-  printf ("\033[31mjac is not symmetric\n");
-endif
+%if ( issymmetric(full([Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)]),1.0e-8) )
+%  printf ("\033[32mjac is symmetric\n");
+%else
+%  printf ("\033[31mjac is not symmetric\n");
+%endif
 
 [jac, res] = ass_periodic_ms (strain_exp(:,i), u);
 write_vtk("sol.vtk", u)
