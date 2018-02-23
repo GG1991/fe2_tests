@@ -89,11 +89,12 @@ for nr = 1 : 3
   %du  = - [Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)] \ [ra ; rm+rp];
   du = zeros(size(Kaa,2) + size(Kap,2) ,1);
   min_tol = 1.0e-7;
-  max_its = 1000;
+  max_its = 3000;
   tic()
   tol = 1;
   its = 1;
-  %[du, tol, its]  = cg(-[Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)] , [ra ; rm+rp], du, min_tol, max_its);
+% du = (-[Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)] ) \ [ra ; rm+rp]; tol = 0.0 ; its = 0;
+% [du, tol, its]  = cg(-[Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)] , [ra ; rm+rp], du, min_tol, max_its);
   [du, tol, its]  = cg_pd(-[Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)] , [ra ; rm+rp], du, min_tol, max_its);
   time_sol = toc();
   printf ("\033[33m cg_tol = %f cg_its = %d cg_time = %f\n\033[0m", tol, its, time_sol);
