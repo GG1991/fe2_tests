@@ -95,10 +95,10 @@ for nr = 1 : 3
   its = 1;
   A = [Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)];
   b = [ra ; rm+rp];
-% du = -A \ b; tol = 0.0 ; its = 0;
+% du = -A\b; tol = 0.0 ; its = 0;
 % [du, tol, its] = cg(-A, b, du, min_tol, max_its);
-% [du, tol, its] = cg_pd(-A, b, du, min_tol, max_its);
-  [du, tol, its] = cg_pgs(-A, b, du, min_tol, max_its);
+% [du, tol, its] = cg_pgs(-A, b, du, min_tol, max_its);
+  [du, tol, its] = cg_pd(-A, b, du, min_tol, max_its);
   time_sol = toc();
   printf ("\033[33m cg_tol = %f cg_its = %d cg_time = %f\n\033[0m", tol, its, time_sol);
   
