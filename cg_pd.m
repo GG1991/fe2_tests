@@ -1,5 +1,6 @@
 function [x, err, its] = cg_pd(A, b, x, min_tol, max_its)
 
+fid = fopen ("res_vs_it.dat","w");
 its = 1;
 M_i = 1./diag(A);
 
@@ -19,6 +20,7 @@ while (its < max_its && err > min_tol)
   z_0 = z_1;
   its += 1;
   err = norm(r_1);
+  fprintf(fid,"%d %f\n",its,err);
 endwhile
 
 endfunction
