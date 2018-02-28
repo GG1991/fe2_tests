@@ -10,13 +10,9 @@
 % boundary conditions   : [-ustrain|-ustress|-per_ms|-per_lm]
 % other running options : [-nexp 1]
 %
-global elements
-global coordinates
-global elem_type
-global bc_nods
+global elements; global coordinates; global elem_type
 global bc_y0; global bc_y1; global bc_x0; global bc_x1
-global xg; global wg
-global b_mat
+global xg; global wg; global b_mat;
 global stress; global strain
 
 global nx = 5;
@@ -28,10 +24,7 @@ global nelem
 global dx
 global dy
 
-global npe = 4;
-global dim = 2;
-global nvoi = 3;
-
+global npe = 4; global dim = 2; global nvoi = 3;
 global X0Y0_nod; global X1Y0_nod; global X1Y1_nod; global X0Y1_nod
 global ix_p; global ix_m; global ix_a
 global size_tot;
