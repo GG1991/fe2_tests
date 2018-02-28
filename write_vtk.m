@@ -35,11 +35,11 @@ fprintf(fm, 'VECTORS disp FLOAT\n');
 for n = 1 : nn
    fprintf(fm,'%f %f 0.0\n',u_vec([n*dim - 1, n*dim + 0]));
 end
-fprintf(fm, 'VECTORS residue FLOAT\n');
-%fprintf(fm, 'LOOKUP_TABLE default\n');
-for n = 1 : nn
-   fprintf(fm,'%f %f 0.0\n',res([n*dim - 1, n*dim + 0]));
-end
+%fprintf(fm, 'VECTORS residue FLOAT\n');
+%%fprintf(fm, 'LOOKUP_TABLE default\n');
+%for n = 1 : nn
+%   fprintf(fm,'%f %f 0.0\n',res([n*dim - 1, n*dim + 0]));
+%end
 
 fprintf(fm, 'CELL_DATA %d\n', nelem);
 fprintf(fm, 'SCALARS type FLOAT\n');

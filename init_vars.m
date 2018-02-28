@@ -57,6 +57,14 @@ bc_x0 = [nx + 1 : nx : (ny-2)*nx + 1];
 bc_x1 = [2*nx : nx : (ny-1)*nx];
 bc_nods = [bc_y0, bc_y1, bc_x0, bc_x1]';
 
+global ix_p
+global ix_m
+global ix_a
+
+ix_p = [bc_x1*dim-1, bc_x1*dim-0, bc_y1*dim-1, bc_y1*dim-0]; % + indeces
+ix_m = [bc_x0*dim-1, bc_x0*dim-0, bc_y0*dim-1, bc_y0*dim-0]; % + indeces
+ix_a = setdiff([1:nn*dim],[ix_p, ix_m]); % interior indeces
+
 global coordinates = zeros(nx*ny, dim);
 for i = 1 : ny
   for j = 1 : nx
