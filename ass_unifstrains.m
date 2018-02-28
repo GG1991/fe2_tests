@@ -1,45 +1,59 @@
-function [jac, res] = ass_unifstrains (strain_mac, u_n)
+function [jac, res] = ass_unifstrains(strain_mac, u_n)
 
-global elements
-global coordinates
-global bc_nods
-global b_mat
-global nnods
+global bc_y0
+global bc_y1
+global bc_x0
+global bc_x1
 global npe
 global dim
-global nelem
+global X0Y0_nod
+global X1Y0_nod
+global X1Y1_nod
+global X0Y1_nod
 
-u_e = zeros(npe*dim,1);
-jac = sparse(dim*nnods, dim*nnods);
-res = zeros(dim*nnods, 1);
-ind = zeros(npe*dim, 1);
+[jac, res] = ass_steff (u_n);
 
-for e = 1 : nelem 
+res([bc_x0*dim - 1; bc_x0*dim]) = 0.0;
+res([bc_x1*dim - 1; bc_x1*dim]) = 0.0;
+res([bc_y0*dim - 1; bc_y0*dim]) = 0.0;
+res([bc_y1*dim - 1; bc_y1*dim]) = 0.0;
+res([X0Y0_nod*dim - 1, X0Y0_nod*dim + 0]) = 0.0; % x & y
+res([X1Y0_nod*dim - 1, X1Y0_nod*dim + 0]) = 0.0; % x & y
+res([X1Y1_nod*dim - 1, X1Y1_nod*dim + 0]) = 0.0; % x & y
+res([X0Y1_nod*dim - 1, X0Y1_nod*dim + 0]) = 0.0; % x & y
 
-    u_e([1:2:npe*dim]) = u_n([elements(e, :)*dim - 1]); %set x vals
-    u_e([2:2:npe*dim]) = u_n([elements(e, :)*dim + 0]); %set y vals
+jac([bc_x0*dim - 1; bc_x0*dim], :) = 0.0;
+jac([bc_x1*dim - 1; bc_x1*dim], :) = 0.0;
+jac([bc_y0*dim - 1; bc_y0*dim], :) = 0.0;
+jac([bc_y1*dim - 1; bc_y1*dim], :) = 0.0;
 
-    [jac_e, res_e] = elemental (e, u_e);
-    ind = [elements(e,:)*dim - 1; elements(e,:)*dim - 0](:);
+jac(:, [bc_x0*dim - 1; bc_x0*dim]) = 0.0;
+jac(:, [bc_x1*dim - 1; bc_x1*dim]) = 0.0;
+jac(:, [bc_y0*dim - 1; bc_y0*dim]) = 0.0;
+jac(:, [bc_y1*dim - 1; bc_y1*dim]) = 0.0;
 
-    jac(ind, ind) += jac_e;
-    res(ind) += res_e;
+jac([X0Y0_nod*dim - 1, X0Y0_nod*dim + 0], :) = 0.0;
+jac([X1Y0_nod*dim - 1, X1Y0_nod*dim + 0], :) = 0.0;
+jac([X1Y1_nod*dim - 1, X1Y1_nod*dim + 0], :) = 0.0;
+jac([X0Y1_nod*dim - 1, X0Y1_nod*dim + 0], :) = 0.0;
+jac(:, [X0Y0_nod*dim - 1, X0Y0_nod*dim + 0]) = 0.0;
+jac(:, [X1Y0_nod*dim - 1, X1Y0_nod*dim + 0]) = 0.0;
+jac(:, [X1Y1_nod*dim - 1, X1Y1_nod*dim + 0]) = 0.0;
+jac(:, [X0Y1_nod*dim - 1, X0Y1_nod*dim + 0]) = 0.0;
 
-end
-
-u_d = zeros(size(bc_nods, 1)*dim, 1);
-for n = 1 : size(bc_nods, 1)
-  u_d([n*dim - 1, n*dim]) = [strain_mac(1) strain_mac(3)/2 ; strain_mac(3)/2 strain_mac(2)] * coordinates(bc_nods(n), :)';
-end
-
-res([bc_nods*dim - 1]) = u_n([bc_nods*dim - 1]) - u_d([1:2:size(u_d,1)]); %set x vals
-res([bc_nods*dim + 0]) = u_n([bc_nods*dim + 0]) - u_d([2:2:size(u_d,1)]); %set y vals
-
-jac([bc_nods*dim - 1; bc_nods*dim], :) = 0.0;
-for n = 1 : size(bc_nods, 1)
-  for d = 0 : 1
-    jac(bc_nods(n)*dim - d, bc_nods(n)*dim - d) = 1.0;
+for d = 0 : 1
+  for n = 1 : max(size(bc_x0))
+    jac(bc_x0(n)*dim - d, bc_x0(n)*dim - d) = 1.0;
+    jac(bc_x1(n)*dim - d, bc_x1(n)*dim - d) = 1.0;
   end
+  for n = 1 : max(size(bc_y0))
+    jac(bc_y0(n)*dim - d, bc_y0(n)*dim - d) = 1.0;
+    jac(bc_y1(n)*dim - d, bc_y1(n)*dim - d) = 1.0;
+  end
+  jac(X0Y0_nod*dim - d, X0Y0_nod*dim - d) = 1.0;
+  jac(X1Y0_nod*dim - d, X1Y0_nod*dim - d) = 1.0;
+  jac(X1Y1_nod*dim - d, X1Y1_nod*dim - d) = 1.0;
+  jac(X0Y1_nod*dim - d, X0Y1_nod*dim - d) = 1.0;
 end
 
 endfunction
