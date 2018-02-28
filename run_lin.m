@@ -68,7 +68,7 @@ for i = 1 : nargin
   size_tot = nx*ny*dim;
  elseif (strcmp(argv(){i}, "-ustress"))
   bc_type = "ustress";
-  size_tot = (nx*ny + 3)*dim;
+  size_tot = (nx*ny + nvoi)*dim;
  elseif (strcmp(argv(){i}, "-per_lm"))
   bc_type = "per_lm";
   size_tot = (nx*ny + max(size(bc_y0)) + max(size(bc_x0))) * dim;
