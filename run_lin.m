@@ -14,16 +14,10 @@ global elements
 global coordinates
 global elem_type
 global bc_nods
-global bc_y0
-global bc_y1
-global bc_x0
-global bc_x1
-global xg
-global wg
+global bc_y0; global bc_y1; global bc_x0; global bc_x1
+global xg; global wg
 global b_mat
-global stress
-global strain
-global res
+global stress; global strain
 
 global nx = 5;
 global ny = 5;
@@ -38,15 +32,8 @@ global npe = 4;
 global dim = 2;
 global nvoi = 3;
 
-global X0Y0_nod
-global X1Y0_nod
-global X1Y1_nod
-global X0Y1_nod
-
-global ix_p
-global ix_m
-global ix_a
-
+global X0Y0_nod; global X1Y0_nod; global X1Y1_nod; global X0Y1_nod
+global ix_p; global ix_m; global ix_a
 global size_tot;
 
 init_vars();
@@ -54,6 +41,7 @@ init_vars();
 bc_type   = "ustrain"; % <ustrain|ustress|per_lm|per_ms>
 solver    = "lu";
 nexp = 3;
+
 for i = 1 : nargin
  if (strcmp(argv(){i}, "-cg"))
   solver = "cg";
