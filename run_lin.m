@@ -25,8 +25,8 @@ global stress
 global strain
 global res
 
-global nx = 10;
-global ny = 10;
+global nx = 5;
+global ny = 5;
 global lx = 3;
 global ly = 3;
 global nn
@@ -68,7 +68,7 @@ for i = 1 : nargin
   size_tot = nx*ny*dim;
  elseif (strcmp(argv(){i}, "-ustress"))
   bc_type = "ustress";
-  size_tot = (nx*ny + nvoi)*dim;
+  size_tot = nx*ny*dim + nvoi;
  elseif (strcmp(argv(){i}, "-per_lm"))
   bc_type = "per_lm";
   size_tot = (nx*ny + max(size(bc_y0)) + max(size(bc_x0))) * dim;
@@ -139,11 +139,13 @@ for i = 1 : nexp
  for nr = 1 : 3
  
    if (strcmp(bc_type,"ustrain"))
-     [jac, res] = ass_unifstrains (strain_exp(:,i), u);
+     [jac, res] = ass_unifstrains(strain_exp(:,i), u);
+   elseif (strcmp(bc_type,"ustress"))
+     [jac, res] = ass_unifstress_lm(strain_exp(:,i), u);
    elseif (strcmp(bc_type,"per_ms"))
-     [jac, res] = ass_periodic_ms (strain_exp(:,i), u);
+     [jac, res] = ass_periodic_ms(strain_exp(:,i), u);
    elseif (strcmp(bc_type,"per_lm"))
-     [jac, res] = ass_periodic_lm (strain_exp(:,i), u);
+     [jac, res] = ass_periodic_lm(strain_exp(:,i), u);
    endif
  
    printf ("\033[32m|res| = %f\033[0m", norm(res));
@@ -163,7 +165,7 @@ for i = 1 : nexp
     [du, tol, its] = cg_pgs(-jac, res, du, min_tol, max_its);
    elseif (strcmp(solver, "lu"))
     tol = 1; its = 1;
-    du = -jac\res;
+    du = -(jac\res);
    endif
    
    if (strcmp(bc_type,"per_ms"))
@@ -174,7 +176,7 @@ for i = 1 : nexp
     u(ix_m) = u(ix_m) + dum;
     u(ix_p) = u(ix_p) + dup;
    else
-     u += du;
+    u += du;
    endif
 
    time_sol = toc();
