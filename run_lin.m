@@ -5,7 +5,9 @@
 % octave run_lin.m [solvers] [boundary conditions] [other running options]
 % solvers               : [-lu|-cg|-cg_pd|-cg_pgs] 
 % boundary conditions   : [-ustrain|-ustress|-per_ms|-per_lm]
-% other running options : [-nexp 1]
+% other running options : [-nexp <n>]  sets number of experiments to <n>
+%                         [-nx <n>]  <n> nodes in x direction
+%                         [-ny <n>]  <n> nodes in y direction
 %
 global lx = 3; global ly = 3; global dx; global dy; global nn; global nelem; global nx; global ny;
 global npe = 4; global dim = 2; global nvoi = 3; global size_tot;
@@ -54,10 +56,7 @@ for i = 1 : nexp
    endif
  
    printf ("\033[32m|res| = %f\033[0m", norm(res));
-   if (norm(res) < 1.0e-3)
-     printf ("\n\033[0m");
-     break 
-   endif
+   if (norm(res) < 1.0e-3) printf ("\n\033[0m"); break endif
  
    du = zeros(size(jac,2),1);
 
@@ -104,5 +103,4 @@ if (nexp == 3) c_ave end
 %  printf ("\033[31mjac is not symmetric\n");
 %endif
 
-[jac, res] = ass_periodic_ms (strain_exp(:,i), u);
 write_vtk("sol.vtk", u)
