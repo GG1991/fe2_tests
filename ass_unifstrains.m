@@ -1,15 +1,7 @@
 function [jac, res] = ass_unifstrains(strain_mac, u_n)
 
-global bc_y0
-global bc_y1
-global bc_x0
-global bc_x1
-global npe
-global dim
-global X0Y0_nod
-global X1Y0_nod
-global X1Y1_nod
-global X0Y1_nod
+global bc_y0; global bc_y1; global bc_x0; global bc_x1; global dim
+global X0Y0_nod; global X1Y0_nod; global X1Y1_nod; global X0Y1_nod
 
 [jac, res] = ass_steff (u_n);
 

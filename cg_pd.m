@@ -23,4 +23,6 @@ while (its < max_its && err > min_tol)
   fprintf(fid,"%d %f\n",its,err);
 endwhile
 
+fclose(fid);
+
 endfunction

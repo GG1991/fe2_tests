@@ -40,11 +40,10 @@ strain_exp = [0.005 0 0; 0 0.005 0; 0 0 0.005]';
 for i = 1 : nexp
 
  printf ("\033[31mstrain = %f %f %f\n\033[0m", strain_exp(:,i)');
- 
  u = set_disp(strain_exp(:,i));
 
  for nr = 1 : 3
- 
+
    if (strcmp(bc_type,"ustrain"))
      [jac, res] = ass_unifstrains(strain_exp(:,i), u);
    elseif (strcmp(bc_type,"ustress"))
@@ -53,7 +52,7 @@ for i = 1 : nexp
      [jac, res] = ass_periodic_ms(strain_exp(:,i), u);
    elseif (strcmp(bc_type,"per_lm"))
      [jac, res] = ass_periodic_lm(strain_exp(:,i), u);
-   endif
+   end
  
    printf ("\033[32m|res| = %f\033[0m", norm(res));
    if (norm(res) < 1.0e-3) printf ("\n\033[0m"); break endif
@@ -70,7 +69,7 @@ for i = 1 : nexp
    elseif (strcmp(solver, "lu"))
     tol = 1; its = 1;
     du = -(jac\res);
-   endif
+   end
    
    if (strcmp(bc_type,"per_ms"))
     dua = du([1:size(ix_a,2)]);
@@ -81,11 +80,11 @@ for i = 1 : nexp
     u(ix_p) = u(ix_p) + dup;
    else
     u += du;
-   endif
+   end
 
    time_sol = toc();
    printf ("\033[33m cg_tol = %f cg_its = %d cg_time = %f\n\033[0m", tol, its, time_sol);
- 
+
  end
 
  [strain_ave, stress_ave] = average()
@@ -102,5 +101,4 @@ if (nexp == 3) c_ave end
 %else
 %  printf ("\033[31mjac is not symmetric\n");
 %endif
-
 write_vtk("sol.vtk", u)
