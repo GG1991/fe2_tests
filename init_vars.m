@@ -1,16 +1,11 @@
 function init_vars()
 
-global bc_nods
-global bc_y0; global bc_y1; global bc_x0; global bc_x1
+global bc_nods; global bc_y0; global bc_y1; global bc_x0; global bc_x1
 global xg; global wg; global b_mat; global dsh
 global npe; global dim; global nvoi
-
-global nx; global ny; global nn
-global lx; global ly
-global dx; global dy
-global nelem
+global nx; global ny; global nn; global lx; global ly; global dx; global dy; global nelem
 global X0Y0_nod; global X1Y0_nod; global X1Y1_nod; global X0Y1_nod
-global ix_p; global ix_m; global ix_a
+global ix_p; global ix_m; global ix_a; global solver; global bc_type; global size_tot;
 
 nn = nx*ny;
 nelem = (nx-1)*(ny-1);
@@ -20,8 +15,8 @@ dy = ly/(ny-1);
 global elem_type = zeros(nelem, 1);
 global strain = zeros((nx-1)*(ny-1), nvoi);
 global stress = zeros((nx-1)*(ny-1), nvoi);
-
 global elements = zeros((nx-1)*(ny-1), npe);
+
 for i = 1 : (ny-1)
   for j = 1 : (nx-1)
     elements((i-1)*(nx-1) + j, 1) = j    + (i-1)*nx;
@@ -41,6 +36,16 @@ bc_y1 = [(ny-1)*nx + 2 : 1 : nx*ny-1];
 bc_x0 = [nx + 1 : nx : (ny-2)*nx + 1];
 bc_x1 = [2*nx : nx : (ny-1)*nx];
 bc_nods = [bc_y0, bc_y1, bc_x0, bc_x1]';
+
+if (strcmp(bc_type, "ustrain"))
+ size_tot = nx*ny*dim;
+elseif (strcmp(bc_type, "ustress"))
+ size_tot = nx*ny*dim + nvoi;
+elseif (strcmp(bc_type, "per_lm"))
+ size_tot = (nx*ny + max(size(bc_y0)) + max(size(bc_x0))) * dim;
+elseif (strcmp(bc_type, "per_ms"))
+ size_tot = nx*ny*dim;
+end
 
 ix_p = [bc_x1*dim-1, bc_x1*dim-0, bc_y1*dim-1, bc_y1*dim-0]; % + indeces
 ix_m = [bc_x0*dim-1, bc_x0*dim-0, bc_y0*dim-1, bc_y0*dim-0]; % + indeces
