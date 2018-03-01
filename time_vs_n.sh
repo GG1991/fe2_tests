@@ -1,4 +1,9 @@
 #!/bin/bash
+#SBATCH --job-name="micro_octave"
+#SBATCH --time=00-00:01:30
+#SBATCH --output=micro_octave.out
+#SBATCH --error=micro_octave.err
+#SBATCH --nodes=1
 
 nvals=(10 20 30 40 50 60 70 80)
 #nvals=(10 20 30 40 50 60 70 80 90 100)
