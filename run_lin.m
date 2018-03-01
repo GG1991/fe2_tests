@@ -101,4 +101,4 @@ if (nexp == 3) c_ave end
 %else
 %  printf ("\033[31mjac is not symmetric\n");
 %endif
-write_vtk("sol.vtk", u)
+%write_vtk("sol.vtk", u)
