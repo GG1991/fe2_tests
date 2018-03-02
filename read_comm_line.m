@@ -12,6 +12,8 @@ for i = 1 : nargin
   solver = "cg_pgs";
  elseif (strcmp(argv(){i}, "-lu"))
   solver = "lu";
+ elseif (strcmp(argv(){i}, "-my_lu"))
+  solver = "my_lu";
  elseif (strcmp(argv(){i}, "-ustrain"))
   bc_type = "ustrain";
  elseif (strcmp(argv(){i}, "-ustress"))

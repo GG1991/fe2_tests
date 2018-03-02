@@ -3,7 +3,7 @@
 % 
 % Usage:
 % octave run_lin.m [solvers] [boundary conditions] [other running options]
-% solvers               : [-lu|-cg|-cg_pd|-cg_pgs] 
+% solvers               : [-lu|-my_lu|-cg|-cg_pd|-cg_pgs] 
 % boundary conditions   : [-ustrain|-ustress|-per_ms|-per_lm]
 % other running options : [-nexp <n>]  sets number of experiments to <n>
 %                         [-nx <n>]  <n> nodes in x direction
@@ -66,6 +66,9 @@ for i = 1 : nexp
     [du, tol, its] = cg_pd(-jac, res, du, min_tol, max_its);
    elseif (strcmp(solver, "cg_pgs"))
     [du, tol, its] = cg_pgs(-jac, res, du, min_tol, max_its);
+   elseif (strcmp(solver, "my_lu"))
+    tol = 1; its = 1;
+    du = my_lu(-jac, res);
    elseif (strcmp(solver, "lu"))
     tol = 1; its = 1;
     du = -(jac\res);
