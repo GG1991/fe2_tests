@@ -10,6 +10,8 @@ for i = 1 : nargin
   solver = "cg_pd";
  elseif (strcmp(argv(){i}, "-cg_pgs"))
   solver = "cg_pgs";
+ elseif (strcmp(argv(){i}, "-cg_uzawa"))
+  solver = "cg_uzawa";
  elseif (strcmp(argv(){i}, "-lu"))
   solver = "lu";
  elseif (strcmp(argv(){i}, "-my_lu"))

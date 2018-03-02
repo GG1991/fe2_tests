@@ -1,4 +1,4 @@
-function [x1, x2, err, its] = cg_usawa(A, B, b1, b2, x1, x2, min_tol, max_its)
+function [x1, x2, err, its] = cg_uzawa(A, B, b1, b2, x1, x2, min_tol, max_its)
 
 % solves
 %

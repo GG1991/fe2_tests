@@ -66,6 +66,19 @@ for i = 1 : nexp
     [du, tol, its] = cg_pd(-jac, res, du, min_tol, max_its);
    elseif (strcmp(solver, "cg_pgs"))
     [du, tol, its] = cg_pgs(-jac, res, du, min_tol, max_its);
+   elseif (strcmp(solver, "cg_uzawa"))
+   
+     if (strcmp(bc_type,"per_lm"))
+       A = jac([1:nx*ny*dim],[1:nx*ny*dim]);
+       B = jac([1:nx*ny*dim],[nx*ny*dim+1 : (nx*ny + max(size(bc_y0)) + max(size(bc_x0)))*dim]);
+       b1 = res([1:nx*ny*dim]);
+       b2 = res([nx*ny*dim+1 : (nx*ny + max(size(bc_y0)) + max(size(bc_x0)))*dim]);
+       x1 = zeros(nx*ny*dim, 1);
+       x2 = zeros((max(size(bc_y0)) + max(size(bc_x0)))*dim, 1);
+     end
+     [x1, x2, tol, its] = cg_uzawa(A, B, b1, b2, x1, x2, min_tol, max_its);
+     du = [x1;x2];
+
    elseif (strcmp(solver, "my_lu"))
     tol = 1; its = 1;
     du = my_lu(-jac, res);
