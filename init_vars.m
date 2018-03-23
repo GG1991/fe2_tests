@@ -11,6 +11,7 @@ nn = nx*ny;
 nelem = (nx-1)*(ny-1);
 dx = lx/(nx-1);
 dy = ly/(ny-1);
+int_vars = zeros(nelem, 6); % int_vars(e, [ eps_p_1(3), eps_e_1(3) ] )
 
 global elem_type = zeros(nelem, 1);
 global strain = zeros((nx-1)*(ny-1), nvoi);
