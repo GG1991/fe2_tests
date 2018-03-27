@@ -44,8 +44,8 @@ if (strcmp(mat_model,"plastic"))
 
    %calc sig_2
    [sig_2, eps_e_2, eps_p_2] = model_plast(eps_2, eps_e_1, eps_p_1, E, nu, sig_y);
-   int_vars(e*4+(gp-1), [1 2 3]) = eps_p_2';
-   int_vars(e*4+(gp-1), [4 5 6]) = eps_e_2';
+   int_vars((e-1)*4+gp, [1 2 3]) = eps_p_2';
+   int_vars((e-1)*4+gp, [4 5 6]) = eps_e_2';
 
    res_e += b_mat(:, :, gp)' * sig_2 * wg(gp);
    jac_e += b_mat(:, :, gp)' * c_tan * b_mat(:, :, gp) * wg(gp);
