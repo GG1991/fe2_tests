@@ -36,12 +36,15 @@ printf("\033[33mUnknowns = %d\n\033[0m",size_tot);
 min_tol = 1.0e-7;
 max_its = 3000;
 
-time_steps = 1000;
-strain_exp_0 = [0.0008 0 0]';
+dt = 0.01;
+time_final = 0.2;
+time_steps = round(time_final / dt);
+
+strain_exp_0 = [0.005 0 0]';
 
 for i = 1 : time_steps
 
- strain_exp = strain_exp_0 * (i-1)/time_steps;
+ strain_exp = strain_exp_0 * (i-1) * dt;
  printf ("\033[31mstrain = %f %f %f\n\033[0m", strain_exp);
  u = set_disp(strain_exp);
 

@@ -18,7 +18,7 @@ function [sig_2, eps_e_2, eps_p_2] = model_plast(eps_2, eps_e_1, eps_p_1, E, nu,
  endif
 
  P       = (1/3)*[2 -1 0 ; -1 2 0 ; 0 0 6];
- G       = E/(2 + 2*nu);
+ G       = E/(2*(1 + nu));
  D0      = (E/(1-nu**2)) * [1 nu 0; nu 1 0; 0 0 (1-nu)/2];
 
  eps_1   = eps_e_1 + eps_p_1;
@@ -47,7 +47,7 @@ function [sig_2, eps_e_2, eps_p_2] = model_plast(eps_2, eps_e_1, eps_p_1, E, nu,
    % begin newton-raphson loop
    dl   = 0.0;
    its  = 0;
-   while (its < 5) 
+   while (its < 15) 
      a    = (1/3) * dl * E / (1-nu);
      S2   = sig_y; % perfect plasticity
      phi2 = A/((1+a*dl)**2) + B/((1+b*dl)**2) + C/((1+b*dl)**2);
