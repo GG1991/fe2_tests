@@ -33,30 +33,35 @@ function [sig_2, eps_e_2, eps_p_2] = model_plast(eps_2, eps_e_1, eps_p_1, E, nu,
  f_2_t   = (1/2) * sig_t' * P * sig_t - (1/3) * S2;
 
  if (f_2_t <= 0)
+
    % printf("is linear\n");
    eps_e_2 = eps_e_t;
    eps_p_2 = eps_p_t;
    sig_2   = sig_t;
+
  else
+
    printf("NOT linear\n");
-   A = (1/6)*(sig_t(1) + sig_t(2))**2;
-   B = (1/2)*(sig_t(1) - sig_t(2))**2;
-   C = 2 * sig_t(3)**2;
+   eps_2
+   eps_e_1
+   eps_p_1
+   A = (1/6)*(sig_t(1) + sig_t(2))^2;
+   B = (1/2)*(sig_t(1) - sig_t(2))^2;
+   C = 2 * sig_t(3)^2;
    b = 2 * G;
 
    % begin newton-raphson loop
    dl   = 0.0;
    its  = 0;
-   while (its < 15) 
+   while (its < 8) 
      a    = (1/3) * dl * E / (1-nu);
      S2   = sig_y; % perfect plasticity
-     phi2 = A/((1+a*dl)**2) + B/((1+b*dl)**2) + C/((1+b*dl)**2);
-     q    = (1/2)*phi2 - (1/3)*S2; printf("q = %f\n",q);
-     if (abs(q) < 0.00001) break; endif;
-
-     dq   = -(1/2)*(2*A*a/((1+a*dl)**3) + 2*B*b/((1+b*dl)**3) + 2*C*b/((1+b*dl)**3));
+     phi2 = A/((1+a*dl)^2) + B/((1+b*dl)^2) + C/((1+b*dl)^2);
+     q    = (1/2)*phi2 - (1/3)*S2;
+     printf("q = %f\n",q);
+     if (abs(q) < 1) break; endif
+     dq   = -(A*a/((1+a*dl)^3) + B*b/((1+b*dl)^3) + C*b/((1+b*dl)^3));
      dl  -= q/dq;
-
      its += 1;
    endwhile
 

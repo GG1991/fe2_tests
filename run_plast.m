@@ -37,7 +37,7 @@ min_tol = 1.0e-7;
 max_its = 3000;
 
 dt = 0.01;
-time_final = 0.2;
+time_final = 0.35;
 time_steps = round(time_final / dt);
 
 strain_exp_0 = [0.005 0 0]';
