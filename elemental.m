@@ -2,36 +2,31 @@
 
 function [jac_e, res_e] = elemental (e, u_e)
 
-global elements
-global coordinates
-global elem_type
-global lx
-global ly
-global xg
-global wg
-global b_mat
-global dim
-global npe
-global strain
-global stress
-global mat_model
+global elements; global coordinates; global elem_type
+global lx; global ly; global xg; global wg; global b_mat; global dim; global npe
+global strain; global stress
+global mat_model; global int_vars
 
 jac_e = zeros(dim*npe, dim*npe);
 res_e = zeros(dim*npe, 1);
 
+nu = 0.3;
+if ( distance(e) < 0.75 )
+  elem_type(e) = 2;
+  E  = 1e7;
+else
+  elem_type(e) = 1;
+  E  = 1e6;
+end
 
 if (strcmp(mat_model,"plastic")) 
+ 
+ E       = 1.0e9; 
+ sig_y   = 2.0e11;
+ [sig_2, eps_e_2, eps_p_2] = model_plas(eps_2, eps_e_1, eps_p_1, E, nu, sig_y)
 
 elseif (strcmp(mat_model,"linear")) 
 
-  nu = 0.3;
-  if ( distance(e) < 0.75 )
-    elem_type(e) = 2;
-    E  = 1e7;
-  else
-    elem_type(e) = 1;
-    E  = 1e6;
-  end
   c_tan = [ 1-nu , nu   , 0           ;
             nu   , 1-nu , 0           ;
             0    , 0    , (1-2*nu)/2 ];

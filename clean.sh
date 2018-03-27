@@ -1,1 +1,1 @@
-rm -f *.dat octave-workspace *.jpg *.pdf
+rm -f *.dat *.png *.vtk octave-workspace *.jpg *.pdf
