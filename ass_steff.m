@@ -1,11 +1,7 @@
 % Steffiness matrix
 function [jac, res] = ass_steff (u)
 
-global dim
-global npe
-global nn
-global nelem
-global elements
+global dim; global npe; global nn; global nelem; global elements;
 
 jac = sparse(nn*dim, nn*dim);
 res = zeros(nn*dim, 1);

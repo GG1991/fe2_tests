@@ -5,18 +5,19 @@ global xg; global wg; global b_mat; global dsh
 global npe; global dim; global nvoi
 global nx; global ny; global nn; global lx; global ly; global dx; global dy; global nelem
 global X0Y0_nod; global X1Y0_nod; global X1Y1_nod; global X0Y1_nod
-global ix_p; global ix_m; global ix_a; global solver; global bc_type; global size_tot;
+global ix_p; global ix_m; global ix_a; global solver; global bc_type; global size_tot
+global elem_type; global strain; global stress; global elements; global int_vars;
 
 nn = nx*ny;
 nelem = (nx-1)*(ny-1);
 dx = lx/(nx-1);
 dy = ly/(ny-1);
-int_vars = zeros(nelem*4, 6); % int_vars(e, [ eps_p_1(3), eps_e_1(3) ])
 
-global elem_type = zeros(nelem, 1);
-global strain = zeros((nx-1)*(ny-1), nvoi);
-global stress = zeros((nx-1)*(ny-1), nvoi);
-global elements = zeros((nx-1)*(ny-1), npe);
+elem_type = zeros(nelem, 1);
+strain = zeros((nx-1)*(ny-1), nvoi);
+stress = zeros((nx-1)*(ny-1), nvoi);
+elements = zeros((nx-1)*(ny-1), npe);
+int_vars = zeros(nelem*4, 6); % int_vars(e, [ eps_p_1(3), eps_e_1(3) ])
 
 for i = 1 : (ny-1)
   for j = 1 : (nx-1)

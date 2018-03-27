@@ -16,7 +16,7 @@ global bc_y0; global bc_y1; global bc_x0; global bc_x1;
 global X0Y0_nod; global X1Y0_nod; global X1Y1_nod; global X0Y1_nod;
 global ix_p; global ix_m; global ix_a; global xg; global wg; global b_mat;
 global solver; global bc_type; global nexp;
-global int_vars;
+global mat_model = 'plastic'; global int_vars;
 
 % defaults
 bc_type = "ustrain"; 
@@ -37,23 +37,24 @@ min_tol = 1.0e-7;
 max_its = 3000;
 
 time_steps = 1000;
-strain_exp = [0.005 0 0]';
+strain_exp_0 = [0.0008 0 0]';
 
 for i = 1 : time_steps
 
- printf ("\033[31mstrain = %f %f %f\n\033[0m", strain_exp(:,i)');
- u = set_disp(strain_exp * (i-1)/time_steps);
+ strain_exp = strain_exp_0 * (i-1)/time_steps;
+ printf ("\033[31mstrain = %f %f %f\n\033[0m", strain_exp);
+ u = set_disp(strain_exp);
 
  for nr = 1 : 3
 
    if (strcmp(bc_type,"ustrain"))
-     [jac, res] = ass_unifstrains(strain_exp(:,i), u);
+     [jac, res] = ass_unifstrains(strain_exp, u);
    elseif (strcmp(bc_type,"ustress"))
-     [jac, res] = ass_unifstress_lm(strain_exp(:,i), u);
+     [jac, res] = ass_unifstress_lm(strain_exp, u);
    elseif (strcmp(bc_type,"per_ms"))
-     [jac, res] = ass_periodic_ms(strain_exp(:,i), u);
+     [jac, res] = ass_periodic_ms(strain_exp, u);
    elseif (strcmp(bc_type,"per_lm"))
-     [jac, res] = ass_periodic_lm(strain_exp(:,i), u);
+     [jac, res] = ass_periodic_lm(strain_exp, u);
    end
  
    printf ("\033[32m|res| = %f\033[0m", norm(res));
@@ -105,12 +106,12 @@ for i = 1 : time_steps
 
  end
 
- [strain_ave, stress_ave] = average()
- if (nexp == 3) c_ave(:,i) = stress_ave' / strain_ave(i); end
+ %[strain_ave, stress_ave] = average()
+ %if (nexp == 3) c_ave(:,i) = stress_ave' / strain_ave(i); end
 
 end
 
-if (nexp == 3) c_ave end
+%if (nexp == 3) c_ave end
 
 %figure();
 %spy(jac); print -djpg spy.jpg 

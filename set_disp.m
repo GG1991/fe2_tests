@@ -8,14 +8,18 @@ u = zeros(size_tot, 1);
 
 if (strcmp(bc_type,"ustrain"))
 
-  for n = 1 : max(size(bc_x0))
-    u([bc_x0(n)*dim - 1, bc_x0(n)*dim + 0]) = [strain(1) strain(3)/2 ; strain(3)/2 strain(2)] * coordinates(bc_x0(n), :)';
-    u([bc_x1(n)*dim - 1, bc_x1(n)*dim + 0]) = [strain(1) strain(3)/2 ; strain(3)/2 strain(2)] * coordinates(bc_x1(n), :)';
-  end
-  for n = 1 : max(size(bc_y0))
-    u([bc_y0(n)*dim - 1, bc_y0(n)*dim + 0]) = [strain(1) strain(3)/2 ; strain(3)/2 strain(2)] * coordinates(bc_y0(n), :)';
-    u([bc_y1(n)*dim - 1, bc_y1(n)*dim + 0]) = [strain(1) strain(3)/2 ; strain(3)/2 strain(2)] * coordinates(bc_y1(n), :)';
-  end
+  if(size(bc_x0,2) > 0)
+   for n = 1 : max(size(bc_x0))
+     u([bc_x0(n)*dim - 1, bc_x0(n)*dim + 0]) = [strain(1) strain(3)/2 ; strain(3)/2 strain(2)] * coordinates(bc_x0(n), :)';
+     u([bc_x1(n)*dim - 1, bc_x1(n)*dim + 0]) = [strain(1) strain(3)/2 ; strain(3)/2 strain(2)] * coordinates(bc_x1(n), :)';
+   endfor
+  endif
+  if(size(bc_y0,2) > 0)
+   for n = 1 : max(size(bc_y0))
+     u([bc_y0(n)*dim - 1, bc_y0(n)*dim + 0]) = [strain(1) strain(3)/2 ; strain(3)/2 strain(2)] * coordinates(bc_y0(n), :)';
+     u([bc_y1(n)*dim - 1, bc_y1(n)*dim + 0]) = [strain(1) strain(3)/2 ; strain(3)/2 strain(2)] * coordinates(bc_y1(n), :)';
+   end
+  endif
   u([X0Y0_nod*dim - 1, X0Y0_nod*dim + 0]) = [strain(1) strain(3)/2 ; strain(3)/2 strain(2)] * [0.0, 0.0]'; % x & y
   u([X1Y0_nod*dim - 1, X1Y0_nod*dim + 0]) = [strain(1) strain(3)/2 ; strain(3)/2 strain(2)] * [lx , 0.0]'; % x & y
   u([X1Y1_nod*dim - 1, X1Y1_nod*dim + 0]) = [strain(1) strain(3)/2 ; strain(3)/2 strain(2)] * [lx , ly ]'; % x & y

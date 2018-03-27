@@ -27,23 +27,23 @@ if (strcmp(mat_model,"plastic"))
 
  for gp = 1 : npe
 
-   eps_p_1 = int_vars(e*4+(gp-1), [1 2 3]);
-   eps_e_1 = int_vars(e*4+(gp-1), [4 5 6]);
+   eps_p_1 = int_vars((e-1)*4+gp, [1 2 3])';
+   eps_e_1 = int_vars((e-1)*4+gp, [4 5 6])';
    eps_2 = b_mat(:, :, gp) * u_e;
 
    %calc c_tan by perturbations
    eps_2_1 = eps_2 + [d_eps; 0    ; 0    ];
    eps_2_2 = eps_2 + [0    ; d_eps; 0    ];
    eps_2_3 = eps_2 + [0    ; 0    ; d_eps];
-   [sig_2_1, eps_e_dummy, eps_p_dummy] = model_plas(eps_2_1, eps_e_1, eps_p_1, E, nu, sig_y);
-   [sig_2_2, eps_e_dummy, eps_p_dummy] = model_plas(eps_2_2, eps_e_1, eps_p_1, E, nu, sig_y);
-   [sig_2_3, eps_e_dummy, eps_p_dummy] = model_plas(eps_2_3, eps_e_1, eps_p_1, E, nu, sig_y);
+   [sig_2_1, eps_e_dummy, eps_p_dummy] = model_plast(eps_2_1, eps_e_1, eps_p_1, E, nu, sig_y);
+   [sig_2_2, eps_e_dummy, eps_p_dummy] = model_plast(eps_2_2, eps_e_1, eps_p_1, E, nu, sig_y);
+   [sig_2_3, eps_e_dummy, eps_p_dummy] = model_plast(eps_2_3, eps_e_1, eps_p_1, E, nu, sig_y);
    c_tan(:,1) = sig_2_1/d_eps;
    c_tan(:,2) = sig_2_2/d_eps;
    c_tan(:,3) = sig_2_3/(2*d_eps);
 
    %calc sig_2
-   [sig_2, eps_e_2, eps_p_2] = model_plas(eps_2, eps_e_1, eps_p_1, E, nu, sig_y);
+   [sig_2, eps_e_2, eps_p_2] = model_plast(eps_2, eps_e_1, eps_p_1, E, nu, sig_y);
    int_vars(e*4+(gp-1), [1 2 3]) = eps_p_2';
    int_vars(e*4+(gp-1), [4 5 6]) = eps_e_2';
 

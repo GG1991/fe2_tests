@@ -2,7 +2,20 @@
 % > perfect plasticity f = |s|^2 - s_y^2
 % > Von Mises criterium
 
-function [sig_2, eps_e_2, eps_p_2] = model_plas(eps_2, eps_e_1, eps_p_1, E, nu, sig_y)
+function [sig_2, eps_e_2, eps_p_2] = model_plast(eps_2, eps_e_1, eps_p_1, E, nu, sig_y)
+
+ if (size(eps_2) != [3,1])
+   printf ("model_plast error eps_2 dimensions are not [3,1]");
+   return;
+ endif
+ if (size(eps_e_1) != [3,1])
+   printf ("model_plast error eps_e_1 dimensions are not [3,1]");
+   return;
+ endif
+ if (size(eps_p_1) != [3,1])
+   printf ("model_plast error eps_p_1 dimensions are not [3,1]");
+   return;
+ endif
 
  P       = (1/3)*[2 -1 0 ; -1 2 0 ; 0 0 6];
  G       = E/(2 + 2*nu);
@@ -20,7 +33,7 @@ function [sig_2, eps_e_2, eps_p_2] = model_plas(eps_2, eps_e_1, eps_p_1, E, nu, 
  f_2_t   = (1/2) * sig_t' * P * sig_t - (1/3) * S2;
 
  if (f_2_t <= 0)
-   printf("is linear\n");
+   % printf("is linear\n");
    eps_e_2 = eps_e_t;
    eps_p_2 = eps_p_t;
    sig_2   = sig_t;
@@ -34,7 +47,7 @@ function [sig_2, eps_e_2, eps_p_2] = model_plas(eps_2, eps_e_1, eps_p_1, E, nu, 
    % begin newton-raphson loop
    dl   = 0.0;
    its  = 0;
-   while (its < 20) 
+   while (its < 5) 
      a    = (1/3) * dl * E / (1-nu);
      S2   = sig_y; % perfect plasticity
      phi2 = A/((1+a*dl)**2) + B/((1+b*dl)**2) + C/((1+b*dl)**2);
