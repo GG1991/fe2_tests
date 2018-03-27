@@ -16,6 +16,7 @@ global bc_y0; global bc_y1; global bc_x0; global bc_x1;
 global X0Y0_nod; global X1Y0_nod; global X1Y1_nod; global X0Y1_nod;
 global ix_p; global ix_m; global ix_a; global xg; global wg; global b_mat;
 global solver; global bc_type; global nexp;
+global mat_model = 'linear'
 
 % defaults
 bc_type = "ustrain"; 
