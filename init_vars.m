@@ -17,7 +17,7 @@ elem_type = zeros(nelem, 1);
 strain = zeros((nx-1)*(ny-1), nvoi);
 stress = zeros((nx-1)*(ny-1), nvoi);
 elements = zeros((nx-1)*(ny-1), npe);
-int_vars = zeros(nelem*4, 6); % int_vars(e, [ eps_p_1(3), eps_e_1(3) ])
+int_vars = zeros(nelem*4, 7); % int_vars(e, [ eps_p_1(3) eps_e_1(3) alpha_1 ])
 
 for i = 1 : (ny-1)
   for j = 1 : (nx-1)

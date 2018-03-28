@@ -36,8 +36,8 @@ printf("\033[33mUnknowns = %d\n\033[0m",size_tot);
 min_tol = 1.0e-7;
 max_its = 3000;
 
-dt = 0.01;
-time_final = 0.35;
+dt = 0.2;
+time_final = 20;
 time_steps = round(time_final / dt);
 
 strain_exp_0 = [0.005 0 0]';
@@ -48,7 +48,7 @@ for i = 1 : time_steps
  printf ("\033[31mstrain = %f %f %f\n\033[0m", strain_exp);
  u = set_disp(strain_exp);
 
- for nr = 1 : 3
+ for nr = 1 : 4
 
    if (strcmp(bc_type,"ustrain"))
      [jac, res] = ass_unifstrains(strain_exp, u);
@@ -123,4 +123,4 @@ end
 %else
 %  printf ("\033[31mjac is not symmetric\n");
 %endif
-%write_vtk("sol.vtk", u)
+write_vtk("sol.vtk", u)

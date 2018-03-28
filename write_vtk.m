@@ -1,14 +1,7 @@
 function write_vtk(file_name, u_vec)
 
-global elements
-global coordinates
-global elem_type
-global nn
-global nelem
-global strain
-global stress
-global res
-global dim
+global elements; global coordinates; global elem_type; global nn; global nelem
+global strain; global stress; global res; global dim; global int_vars; global wg
 
 fm = fopen (file_name, "w");
 fprintf(fm, '# vtk DataFile Version 2.0\n');
@@ -47,6 +40,21 @@ fprintf(fm, 'LOOKUP_TABLE default\n');
 for e = 1 : nelem
    fprintf(fm,'%f\n',elem_type(e));
 end
+
+fprintf(fm, 'SCALARS hard FLOAT\n');
+fprintf(fm, 'LOOKUP_TABLE default\n');
+for e = 1 : nelem
+  eps_p_ave = [0 0 0];
+  alpha_ave = 0;
+  for gp = 1 : 4
+    eps_p_ave += int_vars((e-1)*4 + gp,[1 2 3]) * wg(gp);
+    alpha_ave += int_vars((e-1)*4 + gp,[7]) * wg(gp);
+  endfor
+  eps_p_ave /= sum(wg);
+  alpha_ave /= sum(wg);
+
+  fprintf(fm,'%f\n', norm(eps_p_ave));
+endfor
 
 fprintf(fm, 'TENSORS strain FLOAT\n');
 for e = 1 : nelem
