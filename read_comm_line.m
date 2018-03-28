@@ -2,6 +2,12 @@ function [] = read_comm_line(nargin, argv)
 
 global nx; global ny; global dim; global nvoi; global bc_y0; global bc_x0;
 global solver; global bc_type; global nexp; global size_tot;
+global Ef; global Em; global Sy_f; global Sy_m
+
+Ef     = 1e8;
+Em     = 1e7;
+Sy_f   = 2.0e12;
+Sy_m   = 2.0e11;
 
 for i = 1 : nargin
  if (strcmp(argv(){i}, "-cg"))
@@ -30,6 +36,14 @@ for i = 1 : nargin
   ny = str2num(argv(){i+1});
  elseif (strcmp(argv(){i}, "-nexp"))
   nexp = str2num(argv(){i+1});
+ elseif (strcmp(argv(){i}, "-Ef"))
+  Ef = str2num(argv(){i+1});
+ elseif (strcmp(argv(){i}, "-Em"))
+  Em = str2num(argv(){i+1});
+ elseif (strcmp(argv(){i}, "-Sy_f"))
+  Sy_f = str2num(argv(){i+1});
+ elseif (strcmp(argv(){i}, "-Sy_m"))
+  Sy_m = str2num(argv(){i+1});
  endif
 end
 

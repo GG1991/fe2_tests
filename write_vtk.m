@@ -52,7 +52,6 @@ for e = 1 : nelem
   endfor
   eps_p_ave /= sum(wg);
   alpha_ave /= sum(wg);
-
   fprintf(fm,'%f\n', norm(eps_p_ave));
 endfor
 

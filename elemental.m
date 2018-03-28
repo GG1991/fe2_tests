@@ -6,6 +6,7 @@ global elements; global coordinates; global elem_type
 global lx; global ly; global xg; global wg; global b_mat; global dim; global npe
 global strain; global stress
 global mat_model; global int_vars;
+global Ef; global Em; global Sy_f; global Sy_m
 
 jac_e = zeros(dim*npe, dim*npe);
 res_e = zeros(dim*npe, 1);
@@ -13,12 +14,12 @@ res_e = zeros(dim*npe, 1);
 nu = 0.3;
 if ( distance(e) < 0.75 )
   elem_type(e) = 2;
-  E     = 1e8;
-  sig_y = 2.0e11;
+  E     = Ef;
+  sig_y = Sy_f;
 else
   elem_type(e) = 1;
-  E     = 1e7;
-  sig_y = 2.0e17;
+  E     = Em;
+  sig_y = Sy_m;
 end
 
 if (strcmp(mat_model,"plastic")) 

@@ -7,6 +7,7 @@ global nx; global ny; global nn; global lx; global ly; global dx; global dy; glo
 global X0Y0_nod; global X1Y0_nod; global X1Y1_nod; global X0Y1_nod
 global ix_p; global ix_m; global ix_a; global solver; global bc_type; global size_tot
 global elem_type; global strain; global stress; global elements; global int_vars;
+global Ef; global Em; global Sy_f; global Sy_m
 
 nn = nx*ny;
 nelem = (nx-1)*(ny-1);
