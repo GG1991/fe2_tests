@@ -29,17 +29,17 @@ ny      = 5;
 read_comm_line(nargin, argv);
 init_vars();
 
-printf("\033[33mBoundary Conditions = %s\n\033[0m",bc_type);
-printf("\033[33mSolver = %s\n\033[0m",solver);
-printf("\033[33mNumber of experiments = %d\n\033[0m",nexp);
-printf("\033[33mUnknowns = %d\n\033[0m",size_tot);
+printf("Boundary Conditions = %s\n",bc_type);
+printf("Solver = %s\n",solver);
+printf("Number of experiments = %d\n",nexp);
+printf("Unknowns = %d\n",size_tot);
 
 min_tol = 1.0e-7;
 max_its = 3000;
 nvtk = 0;
 
 dt = 0.2;
-time_final = 5;
+time_final = 20;
 time_steps = round(time_final / dt);
 
 strain_exp_0 = [0 0 0.005]';
@@ -47,7 +47,7 @@ strain_exp_0 = [0 0 0.005]';
 for i = 1 : time_steps
 
  strain_exp = strain_exp_0 * (i-1) * dt;
- printf ("\033[31mstrain = %f %f %f\n\033[0m", strain_exp);
+ printf ("strain = %f %f %f\n", strain_exp);
  u = set_disp(strain_exp);
 
  for nr = 1 : 4
@@ -62,7 +62,7 @@ for i = 1 : time_steps
      [jac, res] = ass_periodic_lm(strain_exp, u);
    end
  
-   printf ("\033[32m|res| = %f\033[0m", norm(res));
+   printf ("|res| = %f", norm(res));
    if (norm(res) < 1.0e-3) printf ("\n\033[0m"); break endif
  
    du = zeros(size(jac,2),1);
@@ -107,13 +107,13 @@ for i = 1 : time_steps
    end
 
    time_sol = toc();
-   printf ("\033[33m cg_tol = %f cg_its = %d cg_time = %f\n\033[0m", tol, its, time_sol);
+   printf (" cg_tol = %f cg_its = %d cg_time = %f\n", tol, its, time_sol);
 
  end
 
  %[strain_ave, stress_ave] = average()
  %if (nexp == 3) c_ave(:,i) = stress_ave' / strain_ave(i); end
- if (non_linear_flag == 1) printf ("\033[35mNon_linear ACTIVATED\n\033[0m"); endif
+ if (non_linear_flag == 1) printf ("Non_linear ACTIVATED\n"); endif
 
  if(mod(i,10) == 0)
   outfile = sprintf("sol_%d.vtk", nvtk);
