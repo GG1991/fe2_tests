@@ -5,7 +5,7 @@ function [jac_e, res_e] = elemental (e, u_e)
 global elements; global coordinates; global elem_type
 global lx; global ly; global xg; global wg; global b_mat; global dim; global npe
 global strain; global stress
-global mat_model; global int_vars
+global mat_model; global int_vars;
 
 jac_e = zeros(dim*npe, dim*npe);
 res_e = zeros(dim*npe, 1);
@@ -39,6 +39,7 @@ if (strcmp(mat_model,"plastic"))
    int_vars((e-1)*4+gp, [1 2 3]) = eps_p_2';
    int_vars((e-1)*4+gp, [4 5 6]) = eps_e_2';
    int_vars((e-1)*4+gp, [7])     = alpha_2;
+
    %calc c_tan by perturbations
    eps_2_1 = eps_2 + [d_eps; 0    ; 0    ];
    eps_2_2 = eps_2 + [0    ; d_eps; 0    ];
@@ -49,7 +50,6 @@ if (strcmp(mat_model,"plastic"))
    c_tan(:,1) = (sig_2_1 - sig_2)/d_eps;
    c_tan(:,2) = (sig_2_2 - sig_2)/d_eps;
    c_tan(:,3) = (sig_2_3 - sig_2)/d_eps;
-
    strain(e,:) += eps_2' * wg(gp);
    stress(e,:) += sig_2' * wg(gp);
 

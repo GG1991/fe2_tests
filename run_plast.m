@@ -16,7 +16,7 @@ global bc_y0; global bc_y1; global bc_x0; global bc_x1;
 global X0Y0_nod; global X1Y0_nod; global X1Y1_nod; global X0Y1_nod;
 global ix_p; global ix_m; global ix_a; global xg; global wg; global b_mat;
 global solver; global bc_type; global nexp;
-global mat_model = 'plastic'; global int_vars;
+global mat_model = 'plastic'; global int_vars; global non_linear_flag
 
 % defaults
 bc_type = "ustrain"; 
@@ -35,9 +35,10 @@ printf("\033[33mUnknowns = %d\n\033[0m",size_tot);
 
 min_tol = 1.0e-7;
 max_its = 3000;
+nvtk = 0;
 
 dt = 0.2;
-time_final = 20;
+time_final = 5;
 time_steps = round(time_final / dt);
 
 strain_exp_0 = [0.005 0 0]';
@@ -111,6 +112,13 @@ for i = 1 : time_steps
 
  %[strain_ave, stress_ave] = average()
  %if (nexp == 3) c_ave(:,i) = stress_ave' / strain_ave(i); end
+ if (non_linear_flag == 1) printf ("\033[35mNon_linear ACTIVATED\n\033[0m"); endif
+
+ if(mod(i,10) == 0)
+  outfile = sprintf("sol_%d.vtk", nvtk);
+  write_vtk(outfile, u);
+  nvtk += 1;
+ endif
 
 end
 

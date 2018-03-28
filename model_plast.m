@@ -4,6 +4,8 @@
 
 function [sig_2, eps_e_2, eps_p_2, alpha_2] = model_plast(eps_2, eps_e_1, eps_p_1, alpha_1, E, nu, sig_y)
 
+global non_linear_flag;
+
  if (size(eps_2) != [3,1])
    printf ("model_plast error eps_2 dimensions are not [3,1]");
    return;
@@ -45,6 +47,7 @@ function [sig_2, eps_e_2, eps_p_2, alpha_2] = model_plast(eps_2, eps_e_1, eps_p_
  else
 
    %printf("NOT linear\n");
+   non_linear_flag = 1;
    A = (1/6)*(sig_t(1) + sig_t(2))^2;
    B = (1/2)*(sig_t(1) - sig_t(2))^2;
    C = 2 * sig_t(3)^2;
