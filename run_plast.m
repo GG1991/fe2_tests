@@ -42,7 +42,7 @@ dt = 0.2;
 time_final = 5;
 time_steps = round(time_final / dt);
 
-strain_exp_0 = [0.005 0 0]';
+strain_exp_0 = [0 0 0.005]';
 
 for i = 1 : time_steps
 
