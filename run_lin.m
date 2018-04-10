@@ -28,10 +28,10 @@ ny      = 5;
 read_comm_line(nargin, argv);
 init_vars();
 
-printf("\033[33mBoundary Conditions = %s\n\033[0m",bc_type);
-printf("\033[33mSolver = %s\n\033[0m",solver);
-printf("\033[33mNumber of experiments = %d\n\033[0m",nexp);
-printf("\033[33mUnknowns = %d\n\033[0m",size_tot);
+printf("Boundary Conditions = %s\n",bc_type);
+printf("Solver = %s\n",solver);
+printf("Number of experiments = %d\n",nexp);
+printf("Unknowns = %d\n",size_tot);
 
 min_tol = 1.0e-7;
 max_its = 3000;
@@ -40,7 +40,7 @@ strain_exp = [0.005 0 0; 0 0.005 0; 0 0 0.005]';
 
 for i = 1 : nexp
 
- printf ("\033[31mstrain = %f %f %f\n\033[0m", strain_exp(:,i)');
+ printf ("strain = %f %f %f\n", strain_exp(:,i)');
  u = set_disp(strain_exp(:,i));
 
  for nr = 1 : 3
@@ -55,7 +55,7 @@ for i = 1 : nexp
      [jac, res] = ass_periodic_lm(strain_exp(:,i), u);
    end
  
-   printf ("\033[32m|res| = %f\033[0m", norm(res));
+   printf ("|res| = %f", norm(res));
    if (norm(res) < 1.0e-3) printf ("\n\033[0m"); break endif
  
    du = zeros(size(jac,2),1);
@@ -100,7 +100,7 @@ for i = 1 : nexp
    end
 
    time_sol = toc();
-   printf ("\033[33m cg_tol = %f cg_its = %d cg_time = %f\n\033[0m", tol, its, time_sol);
+   printf ("cg_tol = %f cg_its = %d cg_time = %f\n", tol, its, time_sol);
 
  end
 
@@ -113,6 +113,11 @@ if (nexp == 3) c_ave end
 
 %figure();
 %spy(jac); print -djpg spy.jpg 
+save A.dat jac
+[ia, ja, val] = sparse_to_csr(jac .');
+save jac_ia.dat ia
+save jac_ja.dat ja
+save jac_val.dat val
 %if ( issymmetric(full([Kaa , (Kap+Kam); (Kma+Kpa), (Kpp+Kmp+Kpm+Kmm)]),1.0e-8) )
 %  printf ("\033[32mjac is symmetric\n");
 %else
