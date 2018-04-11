@@ -100,7 +100,7 @@ for i = 1 : nexp
    end
 
    time_sol = toc();
-   printf ("cg_tol = %f cg_its = %d cg_time = %f\n", tol, its, time_sol);
+   printf (" cg_tol = %f cg_its = %d cg_time = %f\n", tol, its, time_sol);
 
  end
 
@@ -113,7 +113,7 @@ if (nexp == 3) c_ave end
 
 %figure();
 %spy(jac); print -djpg spy.jpg 
-save A.dat jac
+save A.octave jac
 [ia, ja, val] = sparse_to_csr(jac .');
 save jac_ia.dat ia
 save jac_ja.dat ja
